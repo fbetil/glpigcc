@@ -1,0 +1,54 @@
+﻿{
+	"extName" : { "message":"Compagnon GLPI","description":"Nom de l'extension"},
+	"extDesc" : {"message":"Votre compagnon GLPI pour Google Chrome","description":"Description de l'extension"},
+	
+	"error": {"message": "Erreur: $detail$ $extended$","description": "Gestion générique des erreurs. Attend le détail de l'erreur en paramètre.","placeholders": {"detail": {"content": "$1","example": "Erreur inconnue !"},"extended": {"content": "($2)","example": "Trace complète de l'erreur..."}}},
+	"errorConfig": {"message": "Problème de configuration, vérifier les options !", "description": "Problème de configuration"},
+	
+	"defaultGlpiversion" : {"message":"Inconnue","description":"Label de version par défaut pour GLPI"},
+	"defaultWSversion" : {"message":"Inconnue","description":"Label de version par défaut pour le plugin Webservices"},
+
+	"iconNotConnected" : {"message":"Non connecté","description":"Label de l'icone"},
+	"iconLoadingData" : {"message":"Chargement des données","description":"Label de l'icone"},
+	"iconConnected" : {"message":"Connecté au compte $compte$","description":"Label de l'icone","placeholders": {"compte": {"content": "$1","example": "Toto DUPONT"}}},
+	
+	"labelLoginMethodHook" : {"message":"Session pré-existante","description":"Méthode de connexion utilisée"},
+	"labelLoginMethodSso" : {"message":"Connexion par SSO","description":"Méthode de connexion utilisée"},
+	"labelLoginMethodClassic" : {"message":"Connexion classique","description":"Méthode de connexion utilisée"},
+
+	"titleOptions" : {"message":"Compagnon GLPI","description":"Titre de la fenêtre d'options"},
+	"titleNotification" : {"message":"Compagnon GLPI","description":"Titre de la fenêtre de notification"},
+
+	"buttonOptionsSave" : {"message":"Sauvegarder","description":"Label du bouton de sauvegarde"},
+	"buttonOptionsTest" : {"message":"Tester","description":"Label du bouton de test de connexion"},
+	
+	"labelOptionsHead" : {"message":"Configuration du Compagnon GLPI","description":"Entête de la fenête d'options"},
+	"labelOptionsSaved" : {"message":"Configuration sauvegardée.","description":"Information"},
+	"labelOptionsChapterServer" : {"message":"Serveur GLPI","description":"Entête du chapitre Serveur"},
+	"labelOptionsChapterSync" : {"message":"Synchronisation","description":"Entête du chapitre Synchronisation"},
+	"labelOptionsChapterAuth" : {"message":"Authentification","description":"Entête du chapitre Authentification"},
+	"labelOptionsGlpiRootUrl" : {"message":"URL de base du serveur GLPI (Ex: http://example.com/glpi/) :","description":"URL de base du serveur GLPI"},
+	"labelOptionsSyncInterval" : {"message":"Interval de synchonisation (en minutes) :","description":"Interval de synchonisation"},
+	"labelOptionsAuthHook" : {"message":"Tenter d'utiliser la connexion déjà établie par le navigateur.","description":"Utiliser une connexion déjà établie par une autre page du navigateur."},
+	"labelOptionsAuthSso" : {"message":"Utiliser la connexion automatique du serveur :","description":"Utiliser le paramétrage de connexion automatique du serveur"},
+	"labelOptionsAuthUsername" : {"message":"Nom d'utilisateur :","description":"Nom d'utilisateur dans GLPI"},
+	"labelOptionsAuthPassword" : {"message":"Mot de passe :","description":"Mot de passe dans GLPI"},
+	"labelOptionsWsUsername" : {"message":"(Facultatif) Webservices - Nom d'utilisateur :","description":"Nom d'utilisateur pour les Webservices"},
+	"labelOptionsWsPassword" : {"message":"(Facultatif) Webservices - Mot de passe :","description":"Mot de passe pour les Webservices"},
+	"labelOptionsTestGlpiversion" : {"message":"Version de GLPI sur ce serveur : $version$","description":"Version de GLPI sur le serveur","placeholders": {"version": {"content": "$1","example": "v0.80"}}},
+	"labelOptionsTestWSversion" : {"message":"Version du plugin Webservices sur ce serveur : $version$","description":"Version du plugin Webservices sur le serveur","placeholders": {"version": {"content": "$1","example": "v1.0"}}},
+	"labelOptionsTestError" : {"message":"Erreur de connexion.","description":"Erreur du test"},
+	
+	"labelPopupRefresh" : {"message":"Actualiser","description":"Label du popup"},
+	"labelPopupOptions" : {"message":"Options","description":"Label du popup"},
+	"labelPopupSearch" : {"message":"Rechercher","description":"Label du popup"},
+	"labelPopupWelcome" : {"message":"Bonjour $username$","description":"Label du popup", "placeholders": {"username": {"content": "$1", "example": "Toto DUPONT" }}},
+	"labelPopupNewTickets" : {"message":"Nouveaux tickets","description":"Label du popup"},
+	"labelPopupAssignTickets" : {"message":"Tickets attribués","description":"Label du popup"},
+	"labelPopupOpenedDate" : {"message":"Date d'ouverture","description":"Label du popup"},
+	"labelPopupTicketTitle" : {"message":"Titre du ticket","description":"Label du popup"},
+	"labelPopupTicketUser" : {"message":"Demandeur","description":"Label du popup"},
+	"labelPopupFooter" : {"message":"Dernière actualisation : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
+	
+	"FIN":{"message":"FIN","description":"FIN"}
+}

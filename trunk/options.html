@@ -1,0 +1,114 @@
+<html>
+  <head>
+	<script type="text/javascript" src="content.js"></script>
+	<script type="text/javascript" src="inc/mimic/mimic.js"></script>
+	<link rel="stylesheet" href="style.css"/>
+	
+	<title></title>
+	
+	<script>
+			
+		// Sauvegarde des options
+		function save_options() {
+			localStorage.GlpiRootUrl = document.getElementById("GlpiRootUrl").value;
+			localStorage.SyncInterval = document.getElementById("SyncInterval").value;
+			localStorage.AuthSso = document.getElementById("AuthSso").checked;
+			localStorage.AuthHook = document.getElementById("AuthHook").checked;
+			localStorage.AuthUsername = document.getElementById("AuthUsername").value;
+			localStorage.AuthPassword = document.getElementById("AuthPassword").value;
+			localStorage.WsUsername = document.getElementById("WsUsername").value;
+			localStorage.WsPassword = document.getElementById("WsPassword").value;
+			initExtension();
+			checkInstall();
+			doLogin('init');
+		}
+		
+		// Restauration des options
+		function restore_options() {
+			var GlpiRootUrl = localStorage.GlpiRootUrl;
+			var SyncInterval = localStorage.SyncInterval;
+			var AuthSso = localStorage.AuthSso;
+			var AuthHook = localStorage.AuthHook;
+			var AuthUsername = localStorage.AuthUsername;
+			var AuthPassword = localStorage.AuthPassword;
+			var WsUsername = localStorage.WsUsername;
+			var WsPassword = localStorage.WsPassword;
+			
+			if (GlpiRootUrl) { document.getElementById("GlpiRootUrl").value = GlpiRootUrl }
+			if (SyncInterval) { document.getElementById("SyncInterval").value = SyncInterval }
+			if (AuthHook) { (AuthHook == "true") ? document.getElementById("AuthHook").checked = true : document.getElementById("AuthHook").checked = false }
+			if (AuthSso) { (AuthSso == "true") ? document.getElementById("AuthSso").checked = true : document.getElementById("AuthSso").checked = false }
+			if (AuthUsername) { document.getElementById("AuthUsername").value = AuthUsername }
+			if (AuthPassword) { document.getElementById("AuthPassword").value = AuthPassword }
+			if (WsUsername) { document.getElementById("WsUsername").value = WsUsername }
+			if (WsPassword) { document.getElementById("WsPassword").value = WsPassword }
+			
+		}
+
+		// Test de la connexion
+		function test_connection(){
+			var status = getServeurStatus(document.getElementById("GlpiRootUrl").value + extVar.GlpiWebservicesUrl);
+			
+			if (!status) {
+				document.getElementById("test-glpiversion").innerText = getMessage("labelOptionsTestGlpiversion", getMessage("labelOptionsTestError"));
+				document.getElementById("test-wsversion").innerText = getMessage("labelOptionsTestWSversion", getMessage("labelOptionsTestError"));
+			} else {
+				document.getElementById("test-glpiversion").innerText = getMessage("labelOptionsTestGlpiversion", status.glpi.toString());
+				document.getElementById("test-wsversion").innerText = getMessage("labelOptionsTestWSversion", status.webservices.toString());
+			}
+		}
+
+		// Procédure de chargement de la page
+		window.onload = function () {
+			document.title = getMessage("titleOptions");
+			restore_options();
+			parseMessage(this);
+			test_connection()
+		}
+
+	</script>
+	
+  </head>	
+
+  <body>
+	<h1>
+		<img src="pics/logo.png">
+		<label id="labelOptionsHead"></label>
+	</h1>
+	
+	<h2><label id="labelOptionsChapterServer"></label></h2>
+	
+	<label id="labelOptionsGlpiRootUrl"></label><input type="text" id="GlpiRootUrl" >
+	
+	<button id="test-button" onclick="test_connection()"><label id="buttonOptionsTest"></label></button>
+	<br/><br/>
+	<label id="labelOptionsWsUsername"></label><input type="text" id="WsUsername">
+	<br/>
+	<label id="labelOptionsWsPassword"></label><input type="password" id="WsPassword">
+	<br/><br/>
+	<div id="test-glpiversion"><label id="labelOptionsTestGlpiversion" value="{'defaultGlpiversion'}"></label></div>
+	<div id="test-wsversion"><label id="labelOptionsTestWSversion" value="{'defaultWSversion'}"></label></div>
+		
+	<h2><label id="labelOptionsChapterAuth"></label></h2>
+
+	<label id="labelOptionsAuthHook"></label><input type="checkbox" id="AuthHook">
+	<br/><br/>
+	<label id="labelOptionsAuthSso"></label><input type="checkbox" id="AuthSso">
+	<br/><br/>
+	<label id="labelOptionsAuthUsername"></label><input type="text" id="AuthUsername">
+	<br/><br/>
+	<label id="labelOptionsAuthPassword"></label><input type="password" id="AuthPassword">
+
+	<h2><label id="labelOptionsChapterSync"></label></h2>
+	
+	<label id="labelOptionsSyncInterval"></label><input type="text" id="SyncInterval">
+
+	<br/><br/>
+	<br/><br/>
+	<div id="footer">
+		<button id="save-button" onclick="save_options()"><label id="buttonOptionsSave"></label></button>
+	</div>
+  </body>
+</html>
+
+

@@ -1,0 +1,30 @@
+<html>
+  <head>
+	<script type="text/javascript" src="content.js"></script>
+	<script type="text/javascript" src="inc/mimic/mimic.js"></script>
+	<link rel="stylesheet" href="style.css"/>
+  
+	<title></title>
+	
+	<script>
+	
+	// Initialisation de l'extension
+	initExtension();
+	setIcon();
+	
+	if (!checkInstall()) {
+		var notification = webkitNotifications.createNotification('pics/icon.png', getMessage("titleNotification"), getMessage("error",getMessage("errorConfig")));
+		notification.show();
+	}else{
+		doLogin('init');
+		resetTimer(1000);
+	}
+
+	</script>
+	
+  </head>
+
+  <body>
+	
+  </body>
+</html>

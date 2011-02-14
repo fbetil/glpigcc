@@ -1,0 +1,186 @@
+<html>
+  <head>
+	<script type="text/javascript" src="content.js"></script>
+	<script type="text/javascript" src="inc/mimic/mimic.js"></script>
+	<script type="text/javascript" src="inc/tablefilter/tablefilter_all_min.js"></script>
+	<script type="text/javascript" src="inc/tablefilter/sortabletable.js"></script>
+	<script type="text/javascript" src="inc/tablefilter/tfAdapter.sortabletable.js"></script>
+	
+	<link rel="stylesheet" href="style.css"/>
+	<link rel="stylesheet" href="inc/tablefilter/filtergrid.css"/>
+	
+	<title></title>
+
+	<script>
+	
+	window.onload = function() {
+		if (extVar.connectionState != 2) {
+			document.write("<img src=\"pics/logo.png\" width=\"100%\" /><label id=\"labelOptionsTestError\"></label>");
+			parseMessage(this);
+		}else{
+			addGlpiCss();
+			parseTemplate();
+		}
+	}
+	
+	// Fonction de présentation des données
+	function parseTemplate() {
+		
+		if (extVar.executionInProgress == true) {
+			alert('toto');
+			return false;
+		}
+		
+		extVar.filterGridParams = {
+			col_width: ["100px","100px","480px"],
+			grid: true,
+			filters_row_index: 1,
+			rows_counter: true,
+			sort: true,
+			paging: true,
+			paging_length: 5
+		};
+		
+		//Vidage des tables et recréation
+		clearTable("New");
+		createTable("New");
+		var newTable = document.getElementById("TableNewTickets");
+
+		clearTable("Assign");
+		createTable("Assign");
+		var assignTable = document.getElementById("TableAssignTickets");
+
+		// Chargement des nouveaux tickets
+		for (var ticket = 0; ticket<extVar.newTickets.length;ticket++){
+			insertTicketRow(newTable, {"date" : extVar.newTickets[ticket].date.toString(), "name" : extVar.newTickets[ticket].name.toString(), "users_name" : extVar.newTickets[ticket].users_name.toString()});
+		}
+		
+		// Chargement des tickets attribués
+		for (var ticket = 0; ticket<extVar.assignTickets.length;ticket++){
+			insertTicketRow(assignTable, {"date" : extVar.assignTickets[ticket].date.toString(), "name" : extVar.assignTickets[ticket].name.toString(), "users_name" : extVar.assignTickets[ticket].users_name.toString()});
+		}
+		
+		extVar.filterGridParams.rows_counter_text = getMessage("labelPopupNewTickets") + " : ";
+		var tf1 = setFilterGrid("TableNewTickets", extVar.filterGridParams);
+		
+		extVar.filterGridParams.rows_counter_text = getMessage("labelPopupAssignTickets") + " : ";
+		var tf2 = setFilterGrid("TableAssignTickets", extVar.filterGridParams);
+		
+		// Mise à jour du pied de page et icones
+		document.getElementById("labelPopupFooter").setAttribute("value",extVar.lastUpdateTime.toString());
+		document.getElementById("iconSearch").setAttribute("src",localStorage.GlpiRootUrl + extVar.GlpiGlobalSearchIcon);
+		document.getElementById("Search").setAttribute("value", getMessage("labelPopupSearch"));
+		document.getElementById("labelPopupWelcome").setAttribute("value", extVar.glpiUserLongName);
+		
+		parseMessage(this);
+
+	}
+	
+	// Fonction d'ajout du ticket dans le tableau
+	function insertTicketRow(table, args) {
+		var count = table.rows.length;
+		
+		var tr = document.createElement('tr');
+		var td1 = document.createElement('td');
+		var td2 = document.createElement('td');
+		var td3 = document.createElement('td');
+
+		(((count-1) % 2) == 0) ? tr.className = "tab_bg_1" : tr.className = "tab_bg_2";
+		
+		td1.innerHTML = args.date;
+		td2.innerHTML = args.users_name;
+		td3.innerHTML = args.name;
+
+		tr.appendChild(td1);
+		tr.appendChild(td2);
+		tr.appendChild(td3);
+
+		table.getElementsByTagName('tbody')[0].appendChild(tr);
+	}
+	
+	// Fonction d'ajout de la feuille de style GLPI
+	function addGlpiCss() {
+		var styles = "@import url('" + localStorage.GlpiRootUrl + extVar.GlpiCssUrl + "');";
+		var newSS = document.createElement('link');
+		newSS.rel = 'stylesheet';
+		newSS.href = 'data:text/css,'+escape(styles);
+		document.getElementsByTagName("head")[0].appendChild(newSS);
+	}
+
+	
+	//Fonction d'ouverture de la page d'options
+	function openOptions() {
+		chrome.tabs.create({ url: "options.html" });
+	}
+	
+	// Fonction de création des tableaux
+	function createTable(state) {
+		var section = document.getElementById(state + "TicketsSection");
+		
+		section.innerHTML = "<table id=\"Table" + state + "Tickets\" class=\"tab_cadrehov\" style=\"width: 100%;\">"
+				+ "<thead>"
+				+ "<tr class=\"tab_bg_2\">"
+				+ "<th><label id=\"labelPopupOpenedDate\"></label></th>"
+				+ "<th><label id=\"labelPopupTicketUser\"></label></th>"
+				+ "<th><label id=\"labelPopupTicketTitle\"></label></th>"
+				+ "</tr>"
+				+ "</thead>"
+				+ "<tbody></tbody>"
+				+ "</table>";
+	}
+	
+	// Fonction de vidage des tableaux
+	function clearTable(state) {
+		var section = document.getElementById(state + "TicketsSection");
+		
+		section.innerHTML = "";
+	}
+	
+	// Fonction de rafraichissement des données
+	function refreshData() {
+		getTracking(true);
+		parseTemplate();
+	}
+	
+	//Fonction d'ouverture de GLPI
+	function openGlpi() {
+		chrome.tabs.create({ url: localStorage.GlpiRootUrl });
+	}
+	
+	</script>
+  </head>
+
+  <body>
+	<div id="PopupBody" style="width: 600px; padding: 10px;">
+		<div id="header">
+			<div id="c_logo" onclick="openGlpi()"></div>
+			<div id="c_preference">
+				<ul>
+					<li id="deconnexion"><label id="labelPopupWelcome" value=""></label></li>
+					<li><a onclick="refreshData()" href="#"><label id="labelPopupRefresh"></label></a></li>
+					<li><a onclick="openOptions()" href="#"><label id="labelPopupOptions"></label></a></li>
+				</ul>
+			</div>
+			<div id="c_recherche">
+				<form>
+					<div id="boutonRecherche">
+						<input type="image" id="iconSearch" src="pics/blank.png">
+					</div>
+					<div id="champRecherche">
+						<input size="15" type="text" id="Search" name="globalsearch" value="" onfocus="this.value='';" style="height: 16px;">
+					</div>
+				</form>
+			</div>
+			<div id="c_menu">
+			</div>
+		</div>
+		<div id="page">
+			<div id="NewTicketsSection"></div>
+			<br>
+			<div id="AssignTicketsSection"></div>
+		</div>
+		<div id="footer" style="margin-top: 100px"><label id="labelPopupFooter"></label></div>
+	</div>
+
+  </body>
+</html>
