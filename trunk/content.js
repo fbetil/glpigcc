@@ -9,8 +9,10 @@ function initExtension() {
 	extVar.GlpiIndexPageUrl = "/index.php";
 	extVar.GlpiLoginPageUrl = "/login.php";
 	extVar.GlpiLoginPageTitle = "GLPI - Login";
-	extVar.GlpiCssUrl = "/css/styles.css";
+	extVar.GlpiCssUrl = new Array("/css/styles.css");
+	extVar.GlpiJsUrl = new Array();
 	extVar.GlpiGlobalSearchIcon = "/pics/ok2.png";
+	extVar.GlpiTicketUrl = "/front/ticket.form.php?id=$id$";
 	
 	extVar.unreadCount = 0;
 	extVar.connectionState = 0;	// 0=>NotConnected, 1=>ConnectionInProgress, 2=>Connected
@@ -28,6 +30,7 @@ function initExtension() {
 	extVar.newTickets = new Array();
 	extVar.assignTickets = new Array();
 	extVar.filterGridParams = new Object();
+	extVar.glpiStyles = new Object();
 	
 	extVar.GlpiVersion = '';
 	extVar.GlpiWebservicesVersion = '';
@@ -81,6 +84,15 @@ function checkInstall() {
 	
 	extVar.GlpiVersion = status.glpi.toString();
 	extVar.GlpiWebservicesVersion = status.webservices.toString();
+	
+	switch (extVar.GlpiVersion) {
+		default:
+		case "0.78.2":
+			extVar.glpiStyles.tab_odd_line = "tab_bg_1";
+			extVar.glpiStyles.tab_even_line = "tab_bg_2";
+			extVar.glpiStyles.tab_cadre = "tab_cadrehov";			
+			break;
+	}
 	
 	return (localStorage.GlpiRootUrl && localStorage.SyncInterval && localStorage.AuthSso && localStorage.AuthHook && localStorage.AuthUsername && localStorage.AuthPassword);
 }
@@ -240,17 +252,17 @@ function getMyInfo() {
 	var args = {"session": extVar.glpiSession };
 	var _getMyInfo = sendRequest('glpi.getMyInfo', args);
 
-	if (!_getMyInfo.faultCode) {
-		extVar.glpiUserLongName = _getMyInfo.firstname.toString() + " " + _getMyInfo.realname.toString();
-		extVar.glpiUserId = parseInt(_getMyInfo.id.toString());
-		return true;
-	}else{
+	if (!_getMyInfo || _getMyInfo.faultCode) {
 		extVar.glpiUserLongName = '';
 		extVar.glpiUserId = 0;
 		extVar.glpiSession = '';
 		extVar.connectionState = 0;
 		setIcon();
 		return false;
+	}else{
+		extVar.glpiUserLongName = _getMyInfo.firstname.toString() + " " + _getMyInfo.realname.toString();
+		extVar.glpiUserId = parseInt(_getMyInfo.id.toString());
+		return true;
 	}
 }
 
@@ -259,10 +271,22 @@ function listTickets(args) {
 	args.session = extVar.glpiSession;
 	var _listTickets = sendRequest('glpi.listTickets', args);
 
-	if (!_listTickets.faultCode) {
-		return _listTickets;
-	}else{
+	if (!_listTickets || _listTickets.faultCode) {
 		return false;
+	}else{
+		return _listTickets;
+	}
+}
+
+// Fonction de récupération des données d'un ticket
+function getTicket(args) {
+	args.session = extVar.glpiSession;
+	var _getTicket = sendRequest('glpi.getTicket', args);
+
+	if (!_getTicket || _getTicket.faultCode) {
+		return false;
+	}else{
+		return _getTicket;
 	}
 }
 

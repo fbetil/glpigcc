@@ -19,6 +19,7 @@
 			parseMessage(this);
 		}else{
 			addGlpiCss();
+			addGlpiJs();
 			parseTemplate();
 		}
 	}
@@ -27,7 +28,6 @@
 	function parseTemplate() {
 		
 		if (extVar.executionInProgress == true) {
-			alert('toto');
 			return false;
 		}
 		
@@ -52,12 +52,12 @@
 
 		// Chargement des nouveaux tickets
 		for (var ticket = 0; ticket<extVar.newTickets.length;ticket++){
-			insertTicketRow(newTable, {"date" : extVar.newTickets[ticket].date.toString(), "name" : extVar.newTickets[ticket].name.toString(), "users_name" : extVar.newTickets[ticket].users_name.toString()});
+			insertTicketRow(newTable, {"id" : extVar.newTickets[ticket].id.toString(), "date" : extVar.newTickets[ticket].date.toString(), "name" : extVar.newTickets[ticket].name.toString(), "users_name" : extVar.newTickets[ticket].users_name.toString()});
 		}
 		
 		// Chargement des tickets attribués
 		for (var ticket = 0; ticket<extVar.assignTickets.length;ticket++){
-			insertTicketRow(assignTable, {"date" : extVar.assignTickets[ticket].date.toString(), "name" : extVar.assignTickets[ticket].name.toString(), "users_name" : extVar.assignTickets[ticket].users_name.toString()});
+			insertTicketRow(assignTable, {"id" : extVar.assignTickets[ticket].id.toString(), "date" : extVar.assignTickets[ticket].date.toString(), "name" : extVar.assignTickets[ticket].name.toString(), "users_name" : extVar.assignTickets[ticket].users_name.toString() });
 		}
 		
 		extVar.filterGridParams.rows_counter_text = getMessage("labelPopupNewTickets") + " : ";
@@ -85,12 +85,13 @@
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
 
-		(((count-1) % 2) == 0) ? tr.className = "tab_bg_1" : tr.className = "tab_bg_2";
-		
+		(((count-1) % 2) == 0) ? tr.className = extVar.glpiStyles.tab_odd_line : tr.className = extVar.glpiStyles.tab_even_line;
+
 		td1.innerHTML = args.date;
 		td2.innerHTML = args.users_name;
-		td3.innerHTML = args.name;
-
+		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + args.name + "</a>"
+			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: 400px;\"></span>";
+			
 		tr.appendChild(td1);
 		tr.appendChild(td2);
 		tr.appendChild(td3);
@@ -98,15 +99,44 @@
 		table.getElementsByTagName('tbody')[0].appendChild(tr);
 	}
 	
-	// Fonction d'ajout de la feuille de style GLPI
-	function addGlpiCss() {
-		var styles = "@import url('" + localStorage.GlpiRootUrl + extVar.GlpiCssUrl + "');";
-		var newSS = document.createElement('link');
-		newSS.rel = 'stylesheet';
-		newSS.href = 'data:text/css,'+escape(styles);
-		document.getElementsByTagName("head")[0].appendChild(newSS);
-	}
+	//Fonction d'affichage/masquage du commentaire du ticket
+	function toggleComment(visible, id, referer) {
+		var span = document.getElementById("Comment" + id);
+		
+		if (visible == true) {
+			var content = getTicket({"ticket": id});
+			var html = content.content.toString();
 
+			html = html.replace(/(<br>|\s){2,}/g,"<br>");
+			
+			span.innerHTML = html;
+			span.style.display = "block";
+		}else{
+			span.innerHTML = "";
+			span.style.display = "none";
+		}
+	}
+	
+	// Fonction d'ajout des feuilles de style GLPI
+	function addGlpiCss() {
+		for (var i=0;i<extVar.GlpiCssUrl.length;i++) {
+			var styles = "@import url('" + localStorage.GlpiRootUrl + extVar.GlpiCssUrl[i] + "');";
+			var newSS = document.createElement('link');
+			newSS.rel = 'stylesheet';
+			newSS.href = 'data:text/css,'+escape(styles);
+			document.getElementsByTagName("head")[0].appendChild(newSS);
+		}
+	}
+	
+	// Fonction d'ajout des scripts GLPI
+	function addGlpiJs() {
+		for (var i=0;i<extVar.GlpiJsUrl.length;i++) {
+			var newSS = document.createElement('script');
+			newSS.type = 'text/javascript';
+			newSS.src = localStorage.GlpiRootUrl + extVar.GlpiJsUrl[i];
+			document.getElementsByTagName("head")[0].appendChild(newSS);
+		}
+	}
 	
 	//Fonction d'ouverture de la page d'options
 	function openOptions() {
@@ -117,9 +147,9 @@
 	function createTable(state) {
 		var section = document.getElementById(state + "TicketsSection");
 		
-		section.innerHTML = "<table id=\"Table" + state + "Tickets\" class=\"tab_cadrehov\" style=\"width: 100%;\">"
+		section.innerHTML = "<table id=\"Table" + state + "Tickets\" class=\"" + extVar.glpiStyles.tab_cadre + "\" style=\"width:700px;\" >"
 				+ "<thead>"
-				+ "<tr class=\"tab_bg_2\">"
+				+ "<tr class=\"" + extVar.glpiStyles.tab_even_line + "\">"
 				+ "<th><label id=\"labelPopupOpenedDate\"></label></th>"
 				+ "<th><label id=\"labelPopupTicketUser\"></label></th>"
 				+ "<th><label id=\"labelPopupTicketTitle\"></label></th>"
@@ -147,11 +177,26 @@
 		chrome.tabs.create({ url: localStorage.GlpiRootUrl });
 	}
 	
+	//Fonction d'ouverture du ticket sur GLPI
+	function goToTicket(id) {
+		chrome.tabs.create({ url: localStorage.GlpiRootUrl + extVar.GlpiTicketUrl.replace("$id", id)});
+	}
+	
+	//Fonction d'affichage d'une tab
+	function showTab(id) {
+		var tabs = document.getElementsByName("tabcontent");
+		
+		for (var i=0; i<tabs.length; i++) {
+			(tabs[i].id == "tab" + id) ? tabs[i].style.display = "block" : tabs[i].style.display = "none";
+		}
+	}
+	
 	</script>
   </head>
 
   <body>
-	<div id="PopupBody" style="width: 600px; padding: 10px;">
+ 
+	<div id="PopupBody" style="width: 700px; padding: 10px;">
 		<div id="header">
 			<div id="c_logo" onclick="openGlpi()"></div>
 			<div id="c_preference">
@@ -175,12 +220,22 @@
 			</div>
 		</div>
 		<div id="page">
-			<div id="NewTicketsSection"></div>
-			<br>
-			<div id="AssignTicketsSection"></div>
+			<div id="tabspanel">
+				<ul>
+					<li><a onclick="showTab(1)" href="#"><label id="labelPopupTracking"></label></a></li>
+					<li><a onclick="showTab(2)" href="#"><label id="labelPopupOther"></label></a></li>
+				</ul>
+			</div>
+			<div id="tab1" name="tabcontent">
+				<div id="NewTicketsSection"></div>
+				<br>
+				<div id="AssignTicketsSection"></div>
+			</div>
+			<div id="tab2" name="tabcontent" style="display: none;">
+				A VOIR PLUS TARD !
+			</div>
 		</div>
 		<div id="footer" style="margin-top: 100px"><label id="labelPopupFooter"></label></div>
 	</div>
-
   </body>
 </html>
