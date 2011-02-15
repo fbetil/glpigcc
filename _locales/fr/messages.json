@@ -48,6 +48,8 @@
 	"labelPopupOpenedDate" : {"message":"Date d'ouverture","description":"Label du popup"},
 	"labelPopupTicketTitle" : {"message":"Titre du ticket","description":"Label du popup"},
 	"labelPopupTicketUser" : {"message":"Demandeur","description":"Label du popup"},
+	"labelPopupTracking" : {"message":"Assistance","description":"Label du popup"},
+	"labelPopupOther" : {"message":"Autres","description":"Label du popup"},
 	"labelPopupFooter" : {"message":"Dernière actualisation : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
 	
 	"FIN":{"message":"FIN","description":"FIN"}
