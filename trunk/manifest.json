@@ -4,8 +4,12 @@
   "homepage_url": "http://code.google.com/p/glpigcc/",
   "description": "__MSG_extDesc__",
   "default_locale" : "fr",
+  "icons": {
+    "48": "pics/icon_48.png",
+    "128": "pics/icon_128.png"
+  },
   "browser_action": {
-    "default_icon": "pics/icon.png",
+    "default_icon": "pics/icon_48.png",
 	"default_popup": "popup.html"
   },
   "permissions": [

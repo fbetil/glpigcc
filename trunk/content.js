@@ -9,10 +9,12 @@ function initExtension() {
 	extVar.GlpiIndexPageUrl = "/index.php";
 	extVar.GlpiLoginPageUrl = "/login.php";
 	extVar.GlpiLoginPageTitle = "GLPI - Login";
-	extVar.GlpiCssUrl = new Array("/css/styles.css");
+	extVar.GlpiCssUrl = new Array("/css/styles.css","/lib/extjs/resources/css/ext-all.css","/css/ext-all-glpi.css");
 	extVar.GlpiJsUrl = new Array();
 	extVar.GlpiGlobalSearchIcon = "/pics/ok2.png";
 	extVar.GlpiTicketUrl = "/front/ticket.form.php?id=$id$";
+	extVar.GlpiNewTicketUrl = "/front/ticket.form.php";
+	extVar.GlpiBookmarkRecordUrl = "/pics/bookmark_record.png";
 	
 	extVar.unreadCount = 0;
 	extVar.connectionState = 0;	// 0=>NotConnected, 1=>ConnectionInProgress, 2=>Connected
@@ -34,6 +36,8 @@ function initExtension() {
 	
 	extVar.GlpiVersion = '';
 	extVar.GlpiWebservicesVersion = '';
+	
+
 }
 
 // Fonction de démarrage du Timer
@@ -94,7 +98,7 @@ function checkInstall() {
 			break;
 	}
 	
-	return (localStorage.GlpiRootUrl && localStorage.SyncInterval && localStorage.AuthSso && localStorage.AuthHook && localStorage.AuthUsername && localStorage.AuthPassword);
+	return (localStorage.GlpiRootUrl && localStorage.SyncInterval && localStorage.AuthSso && localStorage.AuthHook && localStorage.AuthUsername && localStorage.AuthPassword && localStorage.readItems);
 }
 
 // Récupération d'informations de config du serveur
@@ -127,14 +131,21 @@ function parseMessage(template) {
 
 // Fonction d'envoi d'une requete XML-RPC
 function sendRequest(method, args, url) {
+	var oldState = extVar.connectionState;
 	try {
+		extVar.connectionState = 1;
+		setIcon();
 		if (!url) { url = localStorage.GlpiRootUrl + extVar.GlpiWebservicesUrl }
 		var request = new XmlRpcRequest(url, method);
 		if (args) { request.addParam(args) }
 		var response = request.send();
 		var data = response.parseXML();
+		extVar.connectionState = 2;
+		setIcon();
 		return data;
 	}catch (err){
+		extVar.connectionState = oldState;
+		setIcon();
 		return false;
 	}
 }
@@ -341,4 +352,64 @@ function parseUri(sourceUri){
     }
     
     return uri;
+}
+
+/*
+*
+*  UTF-8 data encode / decode
+*  http://www.webtoolkit.info/
+*
+*/
+ 
+var Utf8 = {
+	// public method for url encoding
+	encode : function (string) {
+		string = string.replace(/\r\n/g,"\n");
+		var utftext = "";
+ 
+		for (var n = 0; n < string.length; n++) {
+			var c = string.charCodeAt(n);
+			if (c < 128) {
+				utftext += String.fromCharCode(c);
+			}
+			else if((c > 127) && (c < 2048)) {
+				utftext += String.fromCharCode((c >> 6) | 192);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+			else {
+				utftext += String.fromCharCode((c >> 12) | 224);
+				utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+				utftext += String.fromCharCode((c & 63) | 128);
+			}
+		}
+		return utftext;
+	},
+ 
+	// public method for url decoding
+	decode : function (utftext) {
+		var string = "";
+		var i = 0;
+		var c = c1 = c2 = 0;
+ 
+		while ( i < utftext.length ) {
+			c = utftext.charCodeAt(i);
+			if (c < 128) {
+				string += String.fromCharCode(c);
+				i++;
+			}
+			else if((c > 191) && (c < 224)) {
+				c2 = utftext.charCodeAt(i+1);
+				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+				i += 2;
+			}
+			else {
+				c2 = utftext.charCodeAt(i+1);
+				c3 = utftext.charCodeAt(i+2);
+				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+				i += 3;
+			}
+		}
+		return string;
+	}
+ 
 }

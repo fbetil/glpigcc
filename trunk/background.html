@@ -13,7 +13,7 @@
 	setIcon();
 	
 	if (!checkInstall()) {
-		var notification = webkitNotifications.createNotification('pics/icon.png', getMessage("titleNotification"), getMessage("error",getMessage("errorConfig")));
+		var notification = webkitNotifications.createNotification('pics/icon_48.png', getMessage("titleNotification"), getMessage("error",getMessage("errorConfig")));
 		notification.show();
 	}else{
 		doLogin('init');

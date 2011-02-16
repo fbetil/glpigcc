@@ -2,6 +2,8 @@
   <head>
 	<script type="text/javascript" src="content.js"></script>
 	<script type="text/javascript" src="inc/mimic/mimic.js"></script>
+	<script type="text/javascript" src="inc/extjs/ext-base.js"></script>
+	<script type="text/javascript" src="inc/extjs/ext-all.js"></script>
 	<script type="text/javascript" src="inc/tablefilter/tablefilter_all_min.js"></script>
 	<script type="text/javascript" src="inc/tablefilter/sortabletable.js"></script>
 	<script type="text/javascript" src="inc/tablefilter/tfAdapter.sortabletable.js"></script>
@@ -13,13 +15,34 @@
 
 	<script>
 	
+	var tabs;
+	var gHeight = new Object();
+	var gWidth = new Object();
+	
+	gHeight.total = 580;
+	gHeight.tabs = 460;
+	gHeight.abouth1 = 100;
+	gHeight.tooltip = 90;
+	
+	gWidth.total = 700;
+	gWidth.tabCol1 = "120px";
+	gWidth.tabCol2 = "120px";
+	gWidth.tabCol3 = "400px";
+	gWidth.tabCol4 = "40px";
+	gWidth.tooltip = 400;
+	gWidth.table = "100%";
+	gWidth.tabs = 700;
+	
 	window.onload = function() {
 		if (extVar.connectionState != 2) {
-			document.write("<img src=\"pics/logo.png\" width=\"100%\" /><label id=\"labelOptionsTestError\"></label>");
+			document.write("<img src=\"pics/logo.png\" /><label id=\"labelOptionsTestError\"></label>");
 			parseMessage(this);
 		}else{
 			addGlpiCss();
 			addGlpiJs();
+			document.getElementById("PopupBody").style.height = gHeight.total;
+			document.getElementById("PopupBody").style.width = gWidth.total;
+			createTabs();
 			parseTemplate();
 		}
 	}
@@ -32,13 +55,14 @@
 		}
 		
 		extVar.filterGridParams = {
-			col_width: ["100px","100px","480px"],
+			col_width: [gWidth.tabCol1,gWidth.tabCol2,gWidth.tabCol3,gWidth.tabCol4],
+			//col_4: 'none',
 			grid: true,
 			filters_row_index: 1,
 			rows_counter: true,
 			sort: true,
 			paging: true,
-			paging_length: 5
+			paging_length: 10
 		};
 		
 		//Vidage des tables et recréation
@@ -52,12 +76,12 @@
 
 		// Chargement des nouveaux tickets
 		for (var ticket = 0; ticket<extVar.newTickets.length;ticket++){
-			insertTicketRow(newTable, {"id" : extVar.newTickets[ticket].id.toString(), "date" : extVar.newTickets[ticket].date.toString(), "name" : extVar.newTickets[ticket].name.toString(), "users_name" : extVar.newTickets[ticket].users_name.toString()});
+			insertTicketRow(newTable, {"state": "n", "id" : extVar.newTickets[ticket].id.toString(), "date" : extVar.newTickets[ticket].date.toString(), "name" : extVar.newTickets[ticket].name.toString(), "users_name" : extVar.newTickets[ticket].users_name.toString()});
 		}
 		
 		// Chargement des tickets attribués
 		for (var ticket = 0; ticket<extVar.assignTickets.length;ticket++){
-			insertTicketRow(assignTable, {"id" : extVar.assignTickets[ticket].id.toString(), "date" : extVar.assignTickets[ticket].date.toString(), "name" : extVar.assignTickets[ticket].name.toString(), "users_name" : extVar.assignTickets[ticket].users_name.toString() });
+			insertTicketRow(assignTable, {"state": "a", "id" : extVar.assignTickets[ticket].id.toString(), "date" : extVar.assignTickets[ticket].date.toString(), "name" : extVar.assignTickets[ticket].name.toString(), "users_name" : extVar.assignTickets[ticket].users_name.toString() });
 		}
 		
 		extVar.filterGridParams.rows_counter_text = getMessage("labelPopupNewTickets") + " : ";
@@ -72,8 +96,12 @@
 		document.getElementById("Search").setAttribute("value", getMessage("labelPopupSearch"));
 		document.getElementById("labelPopupWelcome").setAttribute("value", extVar.glpiUserLongName);
 		
-		parseMessage(this);
+		//Masquage du bouton d'aide de tablefilter
+		document.getElementById("helpSpan_TableNewTickets").style.display = "none";
+		document.getElementById("helpSpan_TableAssignTickets").style.display = "none";
 
+		parseMessage(this);
+		
 	}
 	
 	// Fonction d'ajout du ticket dans le tableau
@@ -84,17 +112,25 @@
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
+		var td4 = document.createElement('td');
 
 		(((count-1) % 2) == 0) ? tr.className = extVar.glpiStyles.tab_odd_line : tr.className = extVar.glpiStyles.tab_even_line;
 
 		td1.innerHTML = args.date;
-		td2.innerHTML = args.users_name;
-		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + args.name + "</a>"
-			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: 400px;\"></span>";
-			
+		td2.innerHTML = Utf8.decode(args.users_name);
+		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + Utf8.decode(args.name) + "</a>"
+			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
+		
+		if (localStorage.readItems.indexOf("a" + args.id) == -1) {
+			td4.innerHTML = "<img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\">";
+		}else{
+			td4.innerHTML = "<img id=\"bookmark" + args.id + "\" src=\"pics/blank.png\">";
+		}
+		
 		tr.appendChild(td1);
 		tr.appendChild(td2);
 		tr.appendChild(td3);
+		tr.appendChild(td4);
 
 		table.getElementsByTagName('tbody')[0].appendChild(tr);
 	}
@@ -109,7 +145,7 @@
 
 			html = html.replace(/(<br>|\s){2,}/g,"<br>");
 			
-			span.innerHTML = html;
+			span.innerHTML = Utf8.decode(html);
 			span.style.display = "block";
 		}else{
 			span.innerHTML = "";
@@ -120,10 +156,9 @@
 	// Fonction d'ajout des feuilles de style GLPI
 	function addGlpiCss() {
 		for (var i=0;i<extVar.GlpiCssUrl.length;i++) {
-			var styles = "@import url('" + localStorage.GlpiRootUrl + extVar.GlpiCssUrl[i] + "');";
 			var newSS = document.createElement('link');
 			newSS.rel = 'stylesheet';
-			newSS.href = 'data:text/css,'+escape(styles);
+			newSS.href = localStorage.GlpiRootUrl + extVar.GlpiCssUrl[i];
 			document.getElementsByTagName("head")[0].appendChild(newSS);
 		}
 	}
@@ -143,16 +178,22 @@
 		chrome.tabs.create({ url: "options.html" });
 	}
 	
+	//Fonction d'ouverture d'un lien externe
+	function openExternalLink(url) {
+		chrome.tabs.create({ url: url });
+	}
+	
 	// Fonction de création des tableaux
 	function createTable(state) {
 		var section = document.getElementById(state + "TicketsSection");
 		
-		section.innerHTML = "<table id=\"Table" + state + "Tickets\" class=\"" + extVar.glpiStyles.tab_cadre + "\" style=\"width:700px;\" >"
+		section.innerHTML = "<table id=\"Table" + state + "Tickets\" class=\"" + extVar.glpiStyles.tab_cadre + "\" style=\"width:" + gWidth.table + ";\" >"
 				+ "<thead>"
 				+ "<tr class=\"" + extVar.glpiStyles.tab_even_line + "\">"
 				+ "<th><label id=\"labelPopupOpenedDate\"></label></th>"
 				+ "<th><label id=\"labelPopupTicketUser\"></label></th>"
 				+ "<th><label id=\"labelPopupTicketTitle\"></label></th>"
+				+ "<th><label id=\"labelPopupTicketAction\"></label></th>"
 				+ "</tr>"
 				+ "</thead>"
 				+ "<tbody></tbody>"
@@ -182,21 +223,52 @@
 		chrome.tabs.create({ url: localStorage.GlpiRootUrl + extVar.GlpiTicketUrl.replace("$id", id)});
 	}
 	
-	//Fonction d'affichage d'une tab
-	function showTab(id) {
-		var tabs = document.getElementsByName("tabcontent");
+	//Fonction de bookmark du ticket
+	function markAsRead(state,id) {
+		var img = document.getElementById("bookmark" + id);
 		
-		for (var i=0; i<tabs.length; i++) {
-			(tabs[i].id == "tab" + id) ? tabs[i].style.display = "block" : tabs[i].style.display = "none";
-		}
+		localStorage.readItems = new Array(localStorage.readItems, state + id);
+		
+		img.setAttribute("src", "/pics/blank.png");
+	}
+	
+	//Fonction de création des tabs
+	function createTabs() {
+		tabs = new Ext.TabPanel({
+			renderTo: document.getElementById("tabspanel"),
+			activeTab: 0,
+			width: gWidth.tabs,
+			activeTab: 0,
+			plain:true,
+			defaults:{autoScroll: true},
+			items:[{
+					title: getMessage("labelPopupTracking"),
+					html: "<br><div id=\"NewTicketsSection\"></div><br><div id=\"AssignTicketsSection\"></div>",
+					height: gHeight.tabs
+				},{
+					title: getMessage("labelPopupAbout"),
+					html: "<div id=\"AboutSection\" style=\"text-align: left; \">"
+						+ "<br><h1 style=\"height: " + gHeight.abouth1 + ";\"><img src='pics/logo.png' style=\"float: left\"><br><br>" + getMessage("extName") + "<br><br><span style=\"font-weight: 400;\">" + getMessage("extDesc") + "</span></h1>"
+						+ "<h2>" + getMessage("labelPopupAboutGeneral") + "</h2><br>"
+						+ getMessage("labelPopupAboutVersion",[""]) + "<br>" + getMessage("labelPopupAboutAuthor")
+						+ "<br><br><h2>" + getMessage("labelPopupAboutHelp") + "</h2><br>"
+						+ getMessage("labelPopupAboutHelpContent")
+						+ "<br><br><h2>" + getMessage("labelPopupAboutComponents") + "</h2><br>"
+						+ "Mimic - JavaScript XML-RPC Client : <a href=\"#\" onclick=\"openExternalLink('http://sourceforge.net/projects/mimic-xmlrpc/')\">" + getMessage("labelPopupAboutHomePage") + "</a><br>"
+						+ "Ext JS Cross-Browser Rich Internet Application Framework : <a href=\"#\" onclick=\"openExternalLink('http://www.sencha.com/products/extjs/')\">" + getMessage("labelPopupAboutHomePage") + "</a><br>"
+						+ "HTML Table Filter Generator : <a href=\"#\" onclick=\"openExternalLink('http://tablefilter.free.fr/')\">" + getMessage("labelPopupAboutHomePage") + "</a>"
+						+ "</div>",
+					height: gHeight.tabs
+				}
+			]
+		});
 	}
 	
 	</script>
   </head>
 
   <body>
- 
-	<div id="PopupBody" style="width: 700px; padding: 10px;">
+	<div id="PopupBody" style="padding: 10px;">
 		<div id="header">
 			<div id="c_logo" onclick="openGlpi()"></div>
 			<div id="c_preference">
@@ -220,22 +292,9 @@
 			</div>
 		</div>
 		<div id="page">
-			<div id="tabspanel">
-				<ul>
-					<li><a onclick="showTab(1)" href="#"><label id="labelPopupTracking"></label></a></li>
-					<li><a onclick="showTab(2)" href="#"><label id="labelPopupOther"></label></a></li>
-				</ul>
-			</div>
-			<div id="tab1" name="tabcontent">
-				<div id="NewTicketsSection"></div>
-				<br>
-				<div id="AssignTicketsSection"></div>
-			</div>
-			<div id="tab2" name="tabcontent" style="display: none;">
-				A VOIR PLUS TARD !
-			</div>
+			<div id="tabspanel"></div>
 		</div>
-		<div id="footer" style="margin-top: 100px"><label id="labelPopupFooter"></label></div>
+		<div id="footer" style="margin-top: 10px;"><label id="labelPopupFooter"></label></div>
 	</div>
-  </body>
+	</body>
 </html>
