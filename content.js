@@ -54,6 +54,8 @@ function getTracking(force) {
 	if (force == true) {extVar.executionForced = true}
 	
 	extVar.executionInProgress = true;
+
+	extVar.unreadCount = 0;
 	
 	// Récupération des nouveaux Tickets
 	extVar.newTickets = listTickets({"status":"new", "id2name":true, "limit": extVar.glpiResultLimit});
@@ -69,6 +71,16 @@ function getTracking(force) {
 		extVar.assignTickets = listTickets({"status":"assign", "users_id_assign": extVar.glpiUserId, "id2name":true, "limit": extVar.glpiResultLimit});
 	}
 	
+	//Mise à jour du nombre de non-lu
+	for (var ticket = 0; ticket<extVar.newTickets.length;ticket++){
+		if (localStorage.readItems.indexOf("n" + extVar.newTickets[ticket].id.toString()) == -1) { extVar.unreadCount += 1}
+	}
+	for (var ticket = 0; ticket<extVar.assignTickets.length;ticket++){
+		if (localStorage.readItems.indexOf("a" + extVar.assignTickets[ticket].id.toString()) == -1) { extVar.unreadCount += 1}
+	}
+
+	setIcon();
+
 	extVar.lastUpdateTime = new Date();
 
 	if (extVar.executionForced == false) {
@@ -130,22 +142,23 @@ function parseMessage(template) {
 }
 
 // Fonction d'envoi d'une requete XML-RPC
-function sendRequest(method, args, url) {
+function sendRequest(method, args, url,changeState) {
 	var oldState = extVar.connectionState;
+	if (changeState == null) { changeState = true}
 	try {
 		extVar.connectionState = 1;
-		setIcon();
+		if (changeState == true) { setIcon() }
 		if (!url) { url = localStorage.GlpiRootUrl + extVar.GlpiWebservicesUrl }
 		var request = new XmlRpcRequest(url, method);
 		if (args) { request.addParam(args) }
 		var response = request.send();
 		var data = response.parseXML();
-		extVar.connectionState = 2;
-		setIcon();
+		extVar.connectionState = oldState;
+		if (changeState == true) { setIcon() }
 		return data;
 	}catch (err){
 		extVar.connectionState = oldState;
-		setIcon();
+		if (changeState == true) { setIcon() }
 		return false;
 	}
 }
@@ -292,7 +305,7 @@ function listTickets(args) {
 // Fonction de récupération des données d'un ticket
 function getTicket(args) {
 	args.session = extVar.glpiSession;
-	var _getTicket = sendRequest('glpi.getTicket', args);
+	var _getTicket = sendRequest('glpi.getTicket', args, null, false);
 
 	if (!_getTicket || _getTicket.faultCode) {
 		return false;
@@ -315,8 +328,12 @@ function setIcon() {
 			chrome.browserAction.setTitle({ title: getMessage("iconLoadingData") });
 			break;
 		case 2:
-			chrome.browserAction.setBadgeBackgroundColor({ color: [127, 176, 48, 255] });
-			chrome.browserAction.setBadgeText({ text: extVar.unreadCount.toString() });
+			if (extVar.unreadCount != 0) {
+				chrome.browserAction.setBadgeBackgroundColor({ color: [127, 176, 48, 255] });
+				chrome.browserAction.setBadgeText({ text: extVar.unreadCount.toString() });
+			}else{
+				chrome.browserAction.setBadgeText({ text: "" });
+			}
 			chrome.browserAction.setTitle({ title: getMessage("iconConnected", extVar.glpiUserLongName + ' (' + extVar.loginMethod + ')') });
 			break;
 	}
