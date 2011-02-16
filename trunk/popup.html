@@ -25,9 +25,9 @@
 	gHeight.tooltip = 90;
 	
 	gWidth.total = 700;
-	gWidth.tabCol1 = "120px";
-	gWidth.tabCol2 = "120px";
-	gWidth.tabCol3 = "400px";
+	gWidth.tabCol1 = "125px";
+	gWidth.tabCol2 = "125px";
+	gWidth.tabCol3 = "398px";
 	gWidth.tabCol4 = "40px";
 	gWidth.tooltip = 400;
 	gWidth.table = "100%";
@@ -56,7 +56,7 @@
 		
 		extVar.filterGridParams = {
 			col_width: [gWidth.tabCol1,gWidth.tabCol2,gWidth.tabCol3,gWidth.tabCol4],
-			//col_4: 'none',
+			col_3: 'none',
 			grid: true,
 			filters_row_index: 1,
 			rows_counter: true,
@@ -118,11 +118,11 @@
 
 		td1.innerHTML = args.date;
 		td2.innerHTML = Utf8.decode(args.users_name);
-		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + Utf8.decode(args.name) + "</a>"
+		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + Utf8.decode(args.name.substring(0,40)) + "..." + "</a>"
 			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
-		
-		if (localStorage.readItems.indexOf("a" + args.id) == -1) {
-			td4.innerHTML = "<img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\">";
+
+		if (localStorage.readItems.indexOf(args.state + args.id) == -1) {
+			td4.innerHTML = "<span style=\"align: center\"><img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\"></span>";
 		}else{
 			td4.innerHTML = "<img id=\"bookmark" + args.id + "\" src=\"pics/blank.png\">";
 		}
