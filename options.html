@@ -18,6 +18,7 @@
 			localStorage.AuthPassword = document.getElementById("AuthPassword").value;
 			localStorage.WsUsername = document.getElementById("WsUsername").value;
 			localStorage.WsPassword = document.getElementById("WsPassword").value;
+			if (!localStorage.readItems) { localStorage.readItems = new Array("#") }
 			initExtension();
 			checkInstall();
 			doLogin('init');

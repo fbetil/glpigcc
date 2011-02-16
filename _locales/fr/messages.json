@@ -48,9 +48,20 @@
 	"labelPopupOpenedDate" : {"message":"Date d'ouverture","description":"Label du popup"},
 	"labelPopupTicketTitle" : {"message":"Titre du ticket","description":"Label du popup"},
 	"labelPopupTicketUser" : {"message":"Demandeur","description":"Label du popup"},
+	"labelPopupTicketAction" : {"message":"Action","description":"Label du popup"},
 	"labelPopupTracking" : {"message":"Assistance","description":"Label du popup"},
-	"labelPopupOther" : {"message":"Autres","description":"Label du popup"},
+	"labelPopupAbout" : {"message":"A Propos...","description":"Label du popup"},
 	"labelPopupFooter" : {"message":"Dernière actualisation : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
 	
+	"labelPopupAboutGeneral" : {"message":"Informations","description":"Label du popup"},
+	"labelPopupAboutVersion" : {"message":"Version de l'extension : $version$","description":"Label du popup","placeholders": {"version": {"content": "$1","example": "0.1"}}},
+	"labelPopupAboutAuthor" : {"message":"Auteur : Florian BETIL","description":"Label du popup"},
+
+	"labelPopupAboutHelp" : {"message":"Utilisation","description":"Label du popup"},
+	"labelPopupAboutHelpContent" : {"message":"Bla Bla Bla...","description":"Label du popup"},
+	
+	"labelPopupAboutComponents" : {"message":"Composants externes","description":"Label du popup"},
+	"labelPopupAboutHomePage" : {"message":"Page officielle","description":"Label du popup"},
+
 	"FIN":{"message":"FIN","description":"FIN"}
 }
