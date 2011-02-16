@@ -25,11 +25,11 @@
 	gHeight.tooltip = 90;
 	
 	gWidth.total = 700;
-	gWidth.tabCol1 = "125px";
-	gWidth.tabCol2 = "125px";
-	gWidth.tabCol3 = "398px";
+	gWidth.tabCol1 = "130px";
+	gWidth.tabCol2 = "130px";
+	gWidth.tabCol3 = "388px";
 	gWidth.tabCol4 = "40px";
-	gWidth.tooltip = 400;
+	gWidth.tooltip = 300;
 	gWidth.table = "100%";
 	gWidth.tabs = 700;
 	
@@ -62,7 +62,7 @@
 			rows_counter: true,
 			sort: true,
 			paging: true,
-			paging_length: 10
+			paging_length: 7
 		};
 		
 		//Vidage des tables et recréation
@@ -107,6 +107,7 @@
 	// Fonction d'ajout du ticket dans le tableau
 	function insertTicketRow(table, args) {
 		var count = table.rows.length;
+		(args.name.length >= 46) ? title = Utf8.decode(args.name.substring(0,46)) + "..." : title = Utf8.decode(args.name);
 		
 		var tr = document.createElement('tr');
 		var td1 = document.createElement('td');
@@ -118,13 +119,13 @@
 
 		td1.innerHTML = args.date;
 		td2.innerHTML = Utf8.decode(args.users_name);
-		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + Utf8.decode(args.name.substring(0,40)) + "..." + "</a>"
+		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + title + "</a>"
 			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
 
 		if (localStorage.readItems.indexOf(args.state + args.id) == -1) {
-			td4.innerHTML = "<span style=\"align: center\"><img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\"></span>";
+			td4.innerHTML = "<a href=\"#\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\"><img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" style=\"display: block; margin: 0 auto;\"></a>";
 		}else{
-			td4.innerHTML = "<img id=\"bookmark" + args.id + "\" src=\"pics/blank.png\">";
+			td4.innerHTML = "<img id=\"bookmark" + args.id + "\" src=\"pics/blank.png\" style=\"display: block; margin: 0 auto;\">";
 		}
 		
 		tr.appendChild(td1);
@@ -220,7 +221,7 @@
 	
 	//Fonction d'ouverture du ticket sur GLPI
 	function goToTicket(id) {
-		chrome.tabs.create({ url: localStorage.GlpiRootUrl + extVar.GlpiTicketUrl.replace("$id", id)});
+		chrome.tabs.create({ url: localStorage.GlpiRootUrl + extVar.GlpiTicketUrl.replace("$id$", id)});
 	}
 	
 	//Fonction de bookmark du ticket
@@ -229,7 +230,11 @@
 		
 		localStorage.readItems = new Array(localStorage.readItems, state + id);
 		
+		extVar.unreadCount += -1;
 		img.setAttribute("src", "/pics/blank.png");
+		img.parentElement.onclick = "";	//Pour éviter les doubles click
+
+		setIcon();
 	}
 	
 	//Fonction de création des tabs
@@ -270,7 +275,7 @@
   <body>
 	<div id="PopupBody" style="padding: 10px;">
 		<div id="header">
-			<div id="c_logo" onclick="openGlpi()"></div>
+			<a href=\"#\"><div id="c_logo" onclick="openGlpi()"></div></a>
 			<div id="c_preference">
 				<ul>
 					<li id="deconnexion"><label id="labelPopupWelcome" value=""></label></li>
