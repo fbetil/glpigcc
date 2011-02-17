@@ -3,8 +3,7 @@
 	"extDesc" : {"message":"Votre compagnon GLPI pour Google Chrome","description":"Description de l'extension"},
 	
 	"error": {"message": "Erreur: $detail$ $extended$","description": "Gestion générique des erreurs. Attend le détail de l'erreur en paramètre.","placeholders": {"detail": {"content": "$1","example": "Erreur inconnue !"},"extended": {"content": "($2)","example": "Trace complète de l'erreur..."}}},
-	"errorConfig": {"message": "Problème de configuration, vérifier les options !", "description": "Problème de configuration"},
-	
+
 	"defaultGlpiversion" : {"message":"Inconnue","description":"Label de version par défaut pour GLPI"},
 	"defaultWSversion" : {"message":"Inconnue","description":"Label de version par défaut pour le plugin Webservices"},
 
@@ -16,10 +15,13 @@
 	"labelLoginMethodSso" : {"message":"Connexion par SSO","description":"Méthode de connexion utilisée"},
 	"labelLoginMethodClassic" : {"message":"Connexion classique","description":"Méthode de connexion utilisée"},
 
+	"notificationConfig": {"message": "Problème de configuration, vérifier les options !", "description": "Problème de configuration"},
+	"notificationConfigTitle": {"message": "Connexion impossible", "description": "Titre de notification"},
+	"notificationUnread": {"message": "Vous avez $compte$ éléments non-lus.", "description": "Message éléments non-lus","placeholders": {"compte": {"content": "$1","exemple": "1"}}},
+	"notificationUnreadTitle": {"message": "Eléments non-lus", "description": "Eléments non-lus"},
+	
 	"titleOptions" : {"message":"Compagnon GLPI","description":"Titre de la fenêtre d'options"},
-	"titleNotification" : {"message":"Compagnon GLPI","description":"Titre de la fenêtre de notification"},
 
-	"buttonOptionsSave" : {"message":"Sauvegarder","description":"Label du bouton de sauvegarde"},
 	"buttonOptionsTest" : {"message":"Tester","description":"Label du bouton de test de connexion"},
 	
 	"labelOptionsHead" : {"message":"Configuration du Compagnon GLPI","description":"Entête de la fenête d'options"},
@@ -27,6 +29,8 @@
 	"labelOptionsChapterServer" : {"message":"Serveur GLPI","description":"Entête du chapitre Serveur"},
 	"labelOptionsChapterSync" : {"message":"Synchronisation","description":"Entête du chapitre Synchronisation"},
 	"labelOptionsChapterAuth" : {"message":"Authentification","description":"Entête du chapitre Authentification"},
+	"labelOptionsChapterNotifications" : {"message":"Notifications","description":"Entête du chapitre Notifications"},
+	"labelOptionsChapterModules" : {"message":"Modules","description":"Entête du chapitre Modules"},
 	"labelOptionsGlpiRootUrl" : {"message":"URL de base du serveur GLPI (Ex: http://example.com/glpi/) :","description":"URL de base du serveur GLPI"},
 	"labelOptionsSyncInterval" : {"message":"Interval de synchonisation (en minutes) :","description":"Interval de synchonisation"},
 	"labelOptionsAuthHook" : {"message":"Tenter d'utiliser la connexion déjà établie par le navigateur.","description":"Utiliser une connexion déjà établie par une autre page du navigateur."},
@@ -38,6 +42,10 @@
 	"labelOptionsTestGlpiversion" : {"message":"Version de GLPI sur ce serveur : $version$","description":"Version de GLPI sur le serveur","placeholders": {"version": {"content": "$1","example": "v0.80"}}},
 	"labelOptionsTestWSversion" : {"message":"Version du plugin Webservices sur ce serveur : $version$","description":"Version du plugin Webservices sur le serveur","placeholders": {"version": {"content": "$1","example": "v1.0"}}},
 	"labelOptionsTestError" : {"message":"Erreur de connexion.","description":"Erreur du test"},
+	"labelOptionsUseNotifications" : {"message":"Utiliser les notifications de bureau :","description":"Utiliser les notifications de bureau"},
+	"labelOptionsNotificationsDelay" : {"message":"Délai d'affichage des notifications (en secondes) :","description":"Délai d'affichage des notifications"},
+	"labelOptionsModEnableTracking" : {"message":"Activer le module d'assistance :","description":"Activer le module d'assistance"},
+	"labelOptionsModEnableLocation" : {"message":"Activer le module d'affichage des plans de lieux (Beta) :","description":"Activer le module d'affichage des plans de lieux"},
 	
 	"labelPopupRefresh" : {"message":"Actualiser","description":"Label du popup"},
 	"labelPopupOptions" : {"message":"Options","description":"Label du popup"},
@@ -49,7 +57,9 @@
 	"labelPopupTicketTitle" : {"message":"Titre du ticket","description":"Label du popup"},
 	"labelPopupTicketUser" : {"message":"Demandeur","description":"Label du popup"},
 	"labelPopupTicketAction" : {"message":"Act.","description":"Label du popup"},
+	"labelPopupMarkAsRead" : {"message":"Marquer comme lu","description":"Label du popup"},
 	"labelPopupTracking" : {"message":"Assistance","description":"Label du popup"},
+	"labelPopupLocation" : {"message":"Plans","description":"Label du popup"},
 	"labelPopupAbout" : {"message":"A Propos...","description":"Label du popup"},
 	"labelPopupFooter" : {"message":"Dernière actualisation : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
 	

@@ -99,7 +99,29 @@
 		//Masquage du bouton d'aide de tablefilter
 		document.getElementById("helpSpan_TableNewTickets").style.display = "none";
 		document.getElementById("helpSpan_TableAssignTickets").style.display = "none";
-
+		
+		//Masquage des modules
+		var modTracking = tabs.getItem(0);
+		var modLocation = tabs.getItem(1);
+		var modAbout = tabs.getItem(2);
+		
+		if (localStorage.ModEnableTracking == "false") {
+			modTracking.hide();
+			tabs.hideTabStripItem(modTracking);
+		}
+		if (localStorage.ModEnableLocation == "false") {
+			modLocation.hide();
+			tabs.hideTabStripItem(modLocation);
+		}
+		
+		if (localStorage.ModEnableTracking == "false" && localStorage.ModEnableLocation == "false") {
+			tabs.activate(modAbout);
+		}else if (localStorage.ModEnableTracking == "true") {
+			tabs.activate(modTracking);
+		}else{
+			tabs.activate(modLocation);
+		}
+		
 		parseMessage(this);
 		
 	}
@@ -119,11 +141,11 @@
 
 		td1.innerHTML = args.date;
 		td2.innerHTML = Utf8.decode(args.users_name);
-		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", this)\" onmouseout=\"toggleComment(false," + args.id + ", this)\">" + title + "</a>"
+		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ")\" onmouseout=\"toggleComment(false," + args.id + ")\">" + title + "</a>"
 			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
 
 		if (localStorage.readItems.indexOf(args.state + args.id) == -1) {
-			td4.innerHTML = "<a href=\"#\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\"><img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" style=\"display: block; margin: 0 auto;\"></a>";
+			td4.innerHTML = "<a href=\"#\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\" title=\"" + getMessage("labelPopupMarkAsRead") + "\"><img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" style=\"display: block; margin: 0 auto;\"></a>";
 		}else{
 			td4.innerHTML = "<img id=\"bookmark" + args.id + "\" src=\"pics/blank.png\" style=\"display: block; margin: 0 auto;\">";
 		}
@@ -137,19 +159,20 @@
 	}
 	
 	//Fonction d'affichage/masquage du commentaire du ticket
-	function toggleComment(visible, id, referer) {
+	function toggleComment(visible, id) {
 		var span = document.getElementById("Comment" + id);
 		
 		if (visible == true) {
-			var content = getTicket({"ticket": id});
-			var html = content.content.toString();
+			if (span.innerHTML == "") {
+				var content = getTicket({"ticket": id});
+				var html = content.content.toString();
 
-			html = html.replace(/(<br>|\s){2,}/g,"<br>");
-			
-			span.innerHTML = Utf8.decode(html);
+				html = html.replace(/(<br>|\s){2,}/g,"<br>");
+				
+				span.innerHTML = Utf8.decode(html);
+			}
 			span.style.display = "block";
 		}else{
-			span.innerHTML = "";
 			span.style.display = "none";
 		}
 	}
@@ -210,7 +233,7 @@
 	
 	// Fonction de rafraichissement des données
 	function refreshData() {
-		getTracking(true);
+		loadData(true);
 		parseTemplate();
 	}
 	
@@ -231,8 +254,9 @@
 		localStorage.readItems = new Array(localStorage.readItems, state + id);
 		
 		extVar.unreadCount += -1;
-		img.setAttribute("src", "/pics/blank.png");
-		img.parentElement.onclick = "";	//Pour éviter les doubles click
+		
+		// On empeche les double clic
+		img.parentElement.parentElement.innerHTML = "<img id=\"bookmark" + id + "\" src=\"pics/blank.png\" style=\"display: block; margin: 0 auto;\">";
 
 		setIcon();
 	}
@@ -243,12 +267,15 @@
 			renderTo: document.getElementById("tabspanel"),
 			activeTab: 0,
 			width: gWidth.tabs,
-			activeTab: 0,
 			plain:true,
 			defaults:{autoScroll: true},
 			items:[{
 					title: getMessage("labelPopupTracking"),
 					html: "<br><div id=\"NewTicketsSection\"></div><br><div id=\"AssignTicketsSection\"></div>",
+					height: gHeight.tabs
+				},{
+					title: getMessage("labelPopupLocation"),
+					html: "<br><div id=\"LocationSection\">LES PLANS DISPONIBLES</div>",
 					height: gHeight.tabs
 				},{
 					title: getMessage("labelPopupAbout"),

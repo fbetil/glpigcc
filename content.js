@@ -42,21 +42,41 @@ function initExtension() {
 
 // Fonction de démarrage du Timer
 function resetTimer(interval) {
-	setTimeout("getTracking();", interval);
+	setTimeout("loadData();", interval);
 }
 
-// Fonction de récupération des données
-function getTracking(force) {
+//Fonction de chargement des données
+function loadData(force) {
 	if (extVar.executionInProgress == true) { return false; }
 	if (extVar.executionForced == true && force == null) { return false; }
 	if (extVar.pauseExecution == true && force == null) { return false; }
-
+	
 	if (force == true) {extVar.executionForced = true}
 	
 	extVar.executionInProgress = true;
 
 	extVar.unreadCount = 0;
 	
+	if (localStorage.ModEnableTracking == "true") { getTracking() }
+	
+	setIcon();
+	
+	if (localStorage.UseNotifications == "true" && extVar.unreadCount != 0) { showNotification(getMessage("notificationUnreadTitle"), getMessage("notificationUnread", [extVar.unreadCount.toString()])) }
+
+	extVar.lastUpdateTime = new Date();
+
+	if (extVar.executionForced == false) {
+		resetTimer(localStorage.SyncInterval * 60000);
+	} else {
+		extVar.executionForced = false;
+	}
+	
+	extVar.executionInProgress = false;
+}
+
+// Fonction de récupération des données
+function getTracking() {
+
 	// Récupération des nouveaux Tickets
 	extVar.newTickets = listTickets({"status":"new", "id2name":true, "limit": extVar.glpiResultLimit});
 		
@@ -79,17 +99,6 @@ function getTracking(force) {
 		if (localStorage.readItems.indexOf("a" + extVar.assignTickets[ticket].id.toString()) == -1) { extVar.unreadCount += 1}
 	}
 
-	setIcon();
-
-	extVar.lastUpdateTime = new Date();
-
-	if (extVar.executionForced == false) {
-		resetTimer(localStorage.SyncInterval * 60000);
-	} else {
-		extVar.executionForced = false;
-	}
-	
-	extVar.executionInProgress = false;
 }
 
 // Detection installation correcte
@@ -110,7 +119,19 @@ function checkInstall() {
 			break;
 	}
 	
-	return (localStorage.GlpiRootUrl && localStorage.SyncInterval && localStorage.AuthSso && localStorage.AuthHook && localStorage.AuthUsername && localStorage.AuthPassword && localStorage.readItems);
+	return (
+			localStorage.GlpiRootUrl
+			&& localStorage.SyncInterval
+			&& localStorage.AuthSso
+			&& localStorage.AuthHook
+			&& localStorage.AuthUsername
+			&& localStorage.AuthPassword
+			&& localStorage.readItems
+			&& localStorage.UseNotifications
+			&& localStorage.NotificationsDelay
+			&& localStorage.ModEnableTracking
+			&& localStorage.ModEnableLocation	
+		);
 }
 
 // Récupération d'informations de config du serveur
@@ -337,6 +358,13 @@ function setIcon() {
 			chrome.browserAction.setTitle({ title: getMessage("iconConnected", extVar.glpiUserLongName + ' (' + extVar.loginMethod + ')') });
 			break;
 	}
+}
+
+//Fonction d'affichage d'une notification
+function showNotification(title, content) {
+	var notification = webkitNotifications.createNotification('pics/icon_48.png', title, content);
+	notification.show();
+	setTimeout(function(){notification.cancel();}, localStorage.NotificationsDelay * 1000); 
 }
 
 /* parseUri JS v0.1, by Steven Levithan (http://badassery.blogspot.com)
