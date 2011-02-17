@@ -59,6 +59,9 @@
 
 		// Test de la connexion
 		function test_connection(){
+			localStorage.WsUsername = document.getElementById("WsUsername").value;
+			localStorage.WsPassword = document.getElementById("WsPassword").value;
+		
 			var status = getServeurStatus(document.getElementById("GlpiRootUrl").value + extVar.GlpiWebservicesUrl);
 			
 			if (!status) {
