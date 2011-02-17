@@ -136,7 +136,12 @@ function checkInstall() {
 
 // Récupération d'informations de config du serveur
 function getServeurStatus(url){
-	var status = sendRequest('glpi.test', null, url);
+	var args = new Object();
+	
+	if (localStorage.WsUsername != "") { args.ws_user = localStorage.WsUsername }
+	if (localStorage.WsPassword != "") { args.ws_pass = localStorage.WsPassword }
+	
+	var status = sendRequest('glpi.test', args, url);
 
 	if (!status || status.faultCode) {
 		return false;
@@ -239,6 +244,10 @@ function doLogin(method) {
 			extVar.loginOrder.shift();	// On supprime le premier élément du tableau
 			
 			var args = {"login_name": localStorage.AuthUsername, "login_password": localStorage.AuthPassword };
+			
+			if (localStorage.WsUsername != "") { args.ws_user = localStorage.WsUsername }
+			if (localStorage.WsPassword != "") { args.ws_pass = localStorage.WsPassword }
+			
 			var _doLogin = sendRequest('glpi.doLogin', args);
 
 			if (!_doLogin || _doLogin.faultCode) {
