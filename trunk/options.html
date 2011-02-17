@@ -18,10 +18,13 @@
 			localStorage.AuthPassword = document.getElementById("AuthPassword").value;
 			localStorage.WsUsername = document.getElementById("WsUsername").value;
 			localStorage.WsPassword = document.getElementById("WsPassword").value;
+			localStorage.UseNotifications = document.getElementById("UseNotifications").checked;
+			localStorage.NotificationsDelay = document.getElementById("NotificationsDelay").value;
+			localStorage.ModEnableTracking = document.getElementById("ModEnableTracking").checked;
+			localStorage.ModEnableLocation = document.getElementById("ModEnableLocation").checked;
+
 			if (!localStorage.readItems) { localStorage.readItems = new Array("#") }
-			initExtension();
-			checkInstall();
-			doLogin('init');
+
 		}
 		
 		// Restauration des options
@@ -34,6 +37,10 @@
 			var AuthPassword = localStorage.AuthPassword;
 			var WsUsername = localStorage.WsUsername;
 			var WsPassword = localStorage.WsPassword;
+			var UseNotifications = localStorage.UseNotifications;
+			var NotificationsDelay = localStorage.NotificationsDelay;
+			var ModEnableTracking = localStorage.ModEnableTracking;
+			var ModEnableLocation = localStorage.ModEnableLocation;
 			
 			if (GlpiRootUrl) { document.getElementById("GlpiRootUrl").value = GlpiRootUrl }
 			if (SyncInterval) { document.getElementById("SyncInterval").value = SyncInterval }
@@ -43,6 +50,10 @@
 			if (AuthPassword) { document.getElementById("AuthPassword").value = AuthPassword }
 			if (WsUsername) { document.getElementById("WsUsername").value = WsUsername }
 			if (WsPassword) { document.getElementById("WsPassword").value = WsPassword }
+			if (UseNotifications) { (UseNotifications == "true") ? document.getElementById("UseNotifications").checked = true : document.getElementById("UseNotifications").checked = false }
+			if (NotificationsDelay) { document.getElementById("NotificationsDelay").value = NotificationsDelay }
+			if (ModEnableTracking) { (ModEnableTracking == "true") ? document.getElementById("ModEnableTracking").checked = true : document.getElementById("ModEnableTracking").checked = false }
+			if (ModEnableLocation) { (ModEnableLocation == "true") ? document.getElementById("ModEnableLocation").checked = true : document.getElementById("ModEnableLocation").checked = false }
 			
 		}
 
@@ -71,16 +82,14 @@
 	
   </head>	
 
-  <body>
+  <body onUnLoad="save_options()">
 	<h1>
 		<img src="pics/logo.png">
 		<label id="labelOptionsHead"></label>
 	</h1>
 	
 	<h2><label id="labelOptionsChapterServer"></label></h2>
-	
 	<label id="labelOptionsGlpiRootUrl"></label><input type="text" id="GlpiRootUrl" >
-	
 	<button id="test-button" onclick="test_connection()"><label id="buttonOptionsTest"></label></button>
 	<br/><br/>
 	<label id="labelOptionsWsUsername"></label><input type="text" id="WsUsername">
@@ -91,7 +100,6 @@
 	<div id="test-wsversion"><label id="labelOptionsTestWSversion" value="{'defaultWSversion'}"></label></div>
 		
 	<h2><label id="labelOptionsChapterAuth"></label></h2>
-
 	<label id="labelOptionsAuthHook"></label><input type="checkbox" id="AuthHook">
 	<br/><br/>
 	<label id="labelOptionsAuthSso"></label><input type="checkbox" id="AuthSso">
@@ -101,14 +109,18 @@
 	<label id="labelOptionsAuthPassword"></label><input type="password" id="AuthPassword">
 
 	<h2><label id="labelOptionsChapterSync"></label></h2>
-	
 	<label id="labelOptionsSyncInterval"></label><input type="text" id="SyncInterval">
 
+	<h2><label id="labelOptionsChapterNotifications"></label></h2>
+	<label id="labelOptionsUseNotifications"></label><input type="checkbox" id="UseNotifications">
 	<br/><br/>
+	<label id="labelOptionsNotificationsDelay"></label><input type="text" id="NotificationsDelay">
+
+	<h2><label id="labelOptionsChapterModules"></label></h2>
+	<label id="labelOptionsModEnableTracking"></label><input type="checkbox" id="ModEnableTracking">
 	<br/><br/>
-	<div id="footer">
-		<button id="save-button" onclick="save_options()"><label id="buttonOptionsSave"></label></button>
-	</div>
+	<label id="labelOptionsModEnableLocation"></label><input type="checkbox" id="ModEnableLocation">
+
   </body>
 </html>
 
