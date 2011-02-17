@@ -45,7 +45,7 @@
 	"labelOptionsUseNotifications" : {"message":"Utiliser les notifications de bureau :","description":"Utiliser les notifications de bureau"},
 	"labelOptionsNotificationsDelay" : {"message":"Délai d'affichage des notifications (en secondes) :","description":"Délai d'affichage des notifications"},
 	"labelOptionsModEnableTracking" : {"message":"Activer le module d'assistance :","description":"Activer le module d'assistance"},
-	"labelOptionsModEnableLocation" : {"message":"Activer le module d'affichage des plans de lieux (Beta) :","description":"Activer le module d'affichage des plans de lieux"},
+	"labelOptionsModEnableGlobalSearch" : {"message":"Activer le module de recherche globale (Beta) :","description":"Activer le module de recherche globale"},
 	
 	"labelPopupRefresh" : {"message":"Actualiser","description":"Label du popup"},
 	"labelPopupOptions" : {"message":"Options","description":"Label du popup"},
@@ -59,10 +59,13 @@
 	"labelPopupTicketAction" : {"message":"Act.","description":"Label du popup"},
 	"labelPopupMarkAsRead" : {"message":"Marquer comme lu","description":"Label du popup"},
 	"labelPopupTracking" : {"message":"Assistance","description":"Label du popup"},
-	"labelPopupLocation" : {"message":"Plans","description":"Label du popup"},
+	"labelPopupGlobalSearch" : {"message":"Recherche","description":"Label du popup"},
 	"labelPopupAbout" : {"message":"A Propos...","description":"Label du popup"},
 	"labelPopupFooter" : {"message":"Dernière actualisation : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
 	
+	"labelPopupGlobalSearchLabel" : {"message":"Résultat de la recherche globale pour \"$mot$\" :","description":"Label du popup","placeholders": {"mot": {"content": "$1","example": "PC1"}}},
+
+
 	"labelPopupAboutGeneral" : {"message":"Informations","description":"Label du popup"},
 	"labelPopupAboutVersion" : {"message":"Version de l'extension : $version$","description":"Label du popup","placeholders": {"version": {"content": "$1","example": "0.1"}}},
 	"labelPopupAboutAuthor" : {"message":"Auteur : Florian BETIL","description":"Label du popup"},
