@@ -21,7 +21,7 @@
 			localStorage.UseNotifications = document.getElementById("UseNotifications").checked;
 			localStorage.NotificationsDelay = document.getElementById("NotificationsDelay").value;
 			localStorage.ModEnableTracking = document.getElementById("ModEnableTracking").checked;
-			localStorage.ModEnableLocation = document.getElementById("ModEnableLocation").checked;
+			localStorage.ModEnableGlobalSearch = document.getElementById("ModEnableGlobalSearch").checked;
 
 			if (!localStorage.readItems) { localStorage.readItems = new Array("#") }
 
@@ -40,7 +40,7 @@
 			var UseNotifications = localStorage.UseNotifications;
 			var NotificationsDelay = localStorage.NotificationsDelay;
 			var ModEnableTracking = localStorage.ModEnableTracking;
-			var ModEnableLocation = localStorage.ModEnableLocation;
+			var ModEnableGlobalSearch = localStorage.ModEnableGlobalSearch;
 			
 			if (GlpiRootUrl) { document.getElementById("GlpiRootUrl").value = GlpiRootUrl }
 			if (SyncInterval) { document.getElementById("SyncInterval").value = SyncInterval }
@@ -53,7 +53,7 @@
 			if (UseNotifications) { (UseNotifications == "true") ? document.getElementById("UseNotifications").checked = true : document.getElementById("UseNotifications").checked = false }
 			if (NotificationsDelay) { document.getElementById("NotificationsDelay").value = NotificationsDelay }
 			if (ModEnableTracking) { (ModEnableTracking == "true") ? document.getElementById("ModEnableTracking").checked = true : document.getElementById("ModEnableTracking").checked = false }
-			if (ModEnableLocation) { (ModEnableLocation == "true") ? document.getElementById("ModEnableLocation").checked = true : document.getElementById("ModEnableLocation").checked = false }
+			if (ModEnableGlobalSearch) { (ModEnableGlobalSearch == "true") ? document.getElementById("ModEnableGlobalSearch").checked = true : document.getElementById("ModEnableGlobalSearch").checked = false }
 			
 		}
 
@@ -122,7 +122,7 @@
 	<h2><label id="labelOptionsChapterModules"></label></h2>
 	<label id="labelOptionsModEnableTracking"></label><input type="checkbox" id="ModEnableTracking">
 	<br/><br/>
-	<label id="labelOptionsModEnableLocation"></label><input type="checkbox" id="ModEnableLocation">
+	<label id="labelOptionsModEnableGlobalSearch"></label><input type="checkbox" id="ModEnableGlobalSearch">
 
   </body>
 </html>
