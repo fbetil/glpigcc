@@ -130,7 +130,7 @@ function checkInstall() {
 			&& localStorage.UseNotifications
 			&& localStorage.NotificationsDelay
 			&& localStorage.ModEnableTracking
-			&& localStorage.ModEnableLocation	
+			&& localStorage.ModEnableGlobalSearch	
 		);
 }
 
