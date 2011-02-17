@@ -102,24 +102,24 @@
 		
 		//Masquage des modules
 		var modTracking = tabs.getItem(0);
-		var modLocation = tabs.getItem(1);
+		var modGlobalSearch = tabs.getItem(1);
 		var modAbout = tabs.getItem(2);
 		
 		if (localStorage.ModEnableTracking == "false") {
 			modTracking.hide();
 			tabs.hideTabStripItem(modTracking);
 		}
-		if (localStorage.ModEnableLocation == "false") {
-			modLocation.hide();
-			tabs.hideTabStripItem(modLocation);
+		if (localStorage.ModEnableGlobalSearch == "false") {
+			document.getElementById("c_recherche").innerHTML = "<br>";
+			modGlobalSearch.hide();
+			tabs.hideTabStripItem(modGlobalSearch);
 		}
 		
-		if (localStorage.ModEnableTracking == "false" && localStorage.ModEnableLocation == "false") {
-			tabs.activate(modAbout);
-		}else if (localStorage.ModEnableTracking == "true") {
-			tabs.activate(modTracking);
-		}else{
-			tabs.activate(modLocation);
+		for (var i=0; i<tabs.items.length ; i++) {
+			if (tabs.getItem(i).hidden == false) {
+				tabs.activate(i);
+				break;
+			}
 		}
 		
 		parseMessage(this);
@@ -260,6 +260,13 @@
 
 		setIcon();
 	}
+
+	//Fonction de recherche globale
+	function launchGlobalSearch() {
+		var resultDiv = document.getElementById("GlobalSearchSection");
+		resultDiv.innerHTML = getMessage("labelPopupGlobalSearchLabel", [document.getElementById("Search")]);
+		tabs.activate(1);
+	}
 	
 	//Fonction de création des tabs
 	function createTabs() {
@@ -274,8 +281,8 @@
 					html: "<br><div id=\"NewTicketsSection\"></div><br><div id=\"AssignTicketsSection\"></div>",
 					height: gHeight.tabs
 				},{
-					title: getMessage("labelPopupLocation"),
-					html: "<br><div id=\"LocationSection\">LES PLANS DISPONIBLES</div>",
+					title: getMessage("labelPopupGlobalSearch"),
+					html: "<br><div id=\"GlobalSearchSection\"></div>",
 					height: gHeight.tabs
 				},{
 					title: getMessage("labelPopupAbout"),
@@ -313,7 +320,7 @@
 			<div id="c_recherche">
 				<form>
 					<div id="boutonRecherche">
-						<input type="image" id="iconSearch" src="pics/blank.png">
+						<input type="image" id="iconSearch" src="pics/blank.png" onclick="launchGlobalSearch();">
 					</div>
 					<div id="champRecherche">
 						<input size="15" type="text" id="Search" name="globalsearch" value="" onfocus="this.value='';" style="height: 16px;">
