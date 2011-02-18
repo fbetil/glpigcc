@@ -62,6 +62,7 @@
 	"labelPopupGlobalSearch" : {"message":"Recherche","description":"Label du popup"},
 	"labelPopupAbout" : {"message":"A Propos...","description":"Label du popup"},
 	"labelPopupFooter" : {"message":"Dernière actualisation : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
+	"labelPopupTablePaggingNumber" : {"message":"sur","description":"Label du popup"},
 	
 	"labelPopupGlobalSearchLabel" : {"message":"Résultat de la recherche globale pour \"$mot$\" :","description":"Label du popup","placeholders": {"mot": {"content": "$1","example": "PC1"}}},
 
