@@ -96,6 +96,9 @@
 		document.getElementById("Search").setAttribute("value", getMessage("labelPopupSearch"));
 		document.getElementById("labelPopupWelcome").setAttribute("value", extVar.glpiUserLongName);
 		
+		document.getElementById("pgafterspan_TableNewTickets").innerHTML = "&nbsp;" + getMessage("labelPopupTablePaggingNumber");
+		document.getElementById("pgafterspan_TableAssignTickets").innerHTML = "&nbsp;" + getMessage("labelPopupTablePaggingNumber");
+		
 		//Masquage du bouton d'aide de tablefilter
 		document.getElementById("helpSpan_TableNewTickets").style.display = "none";
 		document.getElementById("helpSpan_TableAssignTickets").style.display = "none";
@@ -263,9 +266,9 @@
 
 	//Fonction de recherche globale
 	function launchGlobalSearch() {
-		var resultDiv = document.getElementById("GlobalSearchSection");
-		resultDiv.innerHTML = getMessage("labelPopupGlobalSearchLabel", [document.getElementById("Search")]);
 		tabs.activate(1);
+		var resultDiv = document.getElementById("GlobalSearchSection");
+		resultDiv.innerHTML = getMessage("labelPopupGlobalSearchLabel", ["<b>" + document.getElementById("Search").value + "</b>"]);
 	}
 	
 	//Fonction de création des tabs
@@ -318,7 +321,7 @@
 				</ul>
 			</div>
 			<div id="c_recherche">
-				<form>
+				<form onSubmit="return false;">
 					<div id="boutonRecherche">
 						<input type="image" id="iconSearch" src="pics/blank.png" onclick="launchGlobalSearch();">
 					</div>
