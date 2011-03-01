@@ -81,14 +81,17 @@ function getTracking() {
 	extVar.newTickets = listTickets({"status":"new", "id2name":true, "limit": extVar.glpiResultLimit});
 		
 	// Récupération des Tickets attribués
-	if (extVar.GlpiWebservicesVersion == "1.0.0") {	//Gestion de la v1.0.0 qui ne permet pas de récupérer directement les tickets dont on est chargé
-		extVar.assignTickets = new Array();
-		tmpTickets = listTickets({"status":"assign", "id2name":true, "limit": extVar.glpiResultLimit});
-		for (var ticket = 0; ticket<tmpTickets.length;ticket++){	//Filtre de la liste pour récupérer mes tickets
-			if (tmpTickets[ticket].users_id_assign == extVar.glpiUserId) { extVar.assignTickets.push(tmpTickets[ticket]); }
-		}
-	}else if(extVar.GlpiWebservicesVersion == "1.0.1") {
-		extVar.assignTickets = listTickets({"status":"assign", "users_id_assign": extVar.glpiUserId, "id2name":true, "limit": extVar.glpiResultLimit});
+	switch (extVar.GlpiWebservicesVersion) {
+		case "X.X.X":
+			extVar.assignTickets = listTickets({"status":"assign", "users_id_assign": extVar.glpiUserId, "id2name":true, "limit": extVar.glpiResultLimit});
+			break;
+		default:	//Gestion des versuibs qui ne permettent pas de récupérer directement les tickets dont on est chargé
+			extVar.assignTickets = new Array();
+			tmpTickets = listTickets({"status":"assign", "id2name":true, "limit": extVar.glpiResultLimit});
+			for (var ticket = 0; ticket<tmpTickets.length;ticket++){	//Filtre de la liste pour récupérer mes tickets
+				if (tmpTickets[ticket].users_id_assign == extVar.glpiUserId) { extVar.assignTickets.push(tmpTickets[ticket]); }
+			}
+			break;
 	}
 	
 	//Mise à jour du nombre de non-lu
@@ -320,6 +323,30 @@ function getMyInfo() {
 	}
 }
 
+// Fonction de récupération des profils
+function listMyProfiles(args) {
+	args.session = extVar.glpiSession;
+	var _listMyProfiles = sendRequest('glpi.listMyProfiles', args);
+
+	if (!_listMyProfiles || _listMyProfiles.faultCode) {
+		return false;
+	}else{
+		return _listMyProfiles;
+	}
+}
+
+// Fonction d'activation d'un profil
+function setMyProfile(args) {
+	args.session = extVar.glpiSession;
+	var _setMyProfile = sendRequest('glpi.setMyProfile', args);
+
+	if (!_setMyProfile || _setMyProfile.faultCode) {
+		return false;
+	}else{
+		return _setMyProfile;
+	}
+}
+
 // Fonction de récupération des tickets
 function listTickets(args) {
 	args.session = extVar.glpiSession;
@@ -341,6 +368,31 @@ function getTicket(args) {
 		return false;
 	}else{
 		return _getTicket;
+	}
+}
+
+// Fonction de récupération des données d'un objet générique
+function getObject(args) {
+	args.session = extVar.glpiSession;
+	var _getObject = sendRequest('glpi.getObject', args);
+
+	if (!_getObject || _getObject.faultCode) {
+		return false;
+	}else{
+		return _getObject;
+	}
+}
+
+// Fonction de recherche globale
+function listInventoryObjects(args) {
+	args.session = extVar.glpiSession;
+	args.help = true;
+	var _listInventoryObjects = sendRequest('glpi.listInventoryObjects', args);
+
+	if (!_listInventoryObjects || _listInventoryObjects.faultCode) {
+		return false;
+	}else{
+		return _listInventoryObjects;
 	}
 }
 

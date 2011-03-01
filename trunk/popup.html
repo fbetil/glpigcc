@@ -66,12 +66,12 @@
 		};
 		
 		//Vidage des tables et recréation
-		clearTable("New");
-		createTable("New");
+		clearTableTracking("New");
+		createTableTracking("New");
 		var newTable = document.getElementById("TableNewTickets");
 
-		clearTable("Assign");
-		createTable("Assign");
+		clearTableTracking("Assign");
+		createTableTracking("Assign");
 		var assignTable = document.getElementById("TableAssignTickets");
 
 		// Chargement des nouveaux tickets
@@ -96,8 +96,8 @@
 		document.getElementById("Search").setAttribute("value", getMessage("labelPopupSearch"));
 		document.getElementById("labelPopupWelcome").setAttribute("value", extVar.glpiUserLongName);
 		
-		document.getElementById("pgafterspan_TableNewTickets").innerHTML = "&nbsp;" + getMessage("labelPopupTablePaggingNumber");
-		document.getElementById("pgafterspan_TableAssignTickets").innerHTML = "&nbsp;" + getMessage("labelPopupTablePaggingNumber");
+		document.getElementById("pgafterspan_TableNewTickets").innerHTML = "&nbsp;" + getMessage("labelPopupTablePagingNumber");
+		document.getElementById("pgafterspan_TableAssignTickets").innerHTML = "&nbsp;" + getMessage("labelPopupTablePagingNumber");
 		
 		//Masquage du bouton d'aide de tablefilter
 		document.getElementById("helpSpan_TableNewTickets").style.display = "none";
@@ -161,6 +161,31 @@
 		table.getElementsByTagName('tbody')[0].appendChild(tr);
 	}
 	
+	// Fonction d'ajout d'un item dans le tableau de recherche globale
+	function insertGlobalSearchRow(table, args) {
+		var count = table.rows.length;
+		
+		var tr = document.createElement('tr');
+		var td1 = document.createElement('td');
+		var td2 = document.createElement('td');
+		var td3 = document.createElement('td');
+		var td4 = document.createElement('td');
+
+		(((count-1) % 2) == 0) ? tr.className = extVar.glpiStyles.tab_odd_line : tr.className = extVar.glpiStyles.tab_even_line;
+
+		td1.innerHTML = args.itemtype;
+		td2.innerHTML = Utf8.decode(args.name);
+		td3.innerHTML = Utf8.decode(args.serial);
+		td4.innerHTML = Utf8.decode(args.otherserial);
+		
+		tr.appendChild(td1);
+		tr.appendChild(td2);
+		tr.appendChild(td3);
+		tr.appendChild(td4);
+
+		table.getElementsByTagName('tbody')[0].appendChild(tr);
+	}
+	
 	//Fonction d'affichage/masquage du commentaire du ticket
 	function toggleComment(visible, id) {
 		var span = document.getElementById("Comment" + id);
@@ -210,8 +235,8 @@
 		chrome.tabs.create({ url: url });
 	}
 	
-	// Fonction de création des tableaux
-	function createTable(state) {
+	// Fonction de création des tableaux d'assistance
+	function createTableTracking(state) {
 		var section = document.getElementById(state + "TicketsSection");
 		
 		section.innerHTML = "<table id=\"Table" + state + "Tickets\" class=\"" + extVar.glpiStyles.tab_cadre + "\" style=\"width:" + gWidth.table + ";\" >"
@@ -227,9 +252,33 @@
 				+ "</table>";
 	}
 	
-	// Fonction de vidage des tableaux
-	function clearTable(state) {
+	// Fonction de création des tableaux de recherche globale
+	function createTableGlobalSearch() {
+		var section = document.getElementById("GlobalSearchSection");
+		
+		section.innerHTML = "<table id=\"TableGlobalSearch\" class=\"" + extVar.glpiStyles.tab_cadre + "\" style=\"width:" + gWidth.table + ";\" >"
+				+ "<thead>"
+				+ "<tr class=\"" + extVar.glpiStyles.tab_even_line + "\">"
+				+ "<th><label id=\"labelPopupSearchResultItemType\"></label></th>"
+				+ "<th><label id=\"labelPopupSearchResultName\"></label></th>"
+				+ "<th><label id=\"labelPopupSearchResultSerial\"></label></th>"
+				+ "<th><label id=\"labelPopupSearchResultOtherserial\"></label></th>"
+				+ "</tr>"
+				+ "</thead>"
+				+ "<tbody></tbody>"
+				+ "</table>";
+	}
+	
+	// Fonction de vidage des tableaux de tickets
+	function clearTableTracking(state) {
 		var section = document.getElementById(state + "TicketsSection");
+		
+		section.innerHTML = "";
+	}
+	
+	// Fonction de vidage du tableau de recherche globale
+	function clearTableGlobalSearch() {
+		var section = document.getElementById("GlobalSearchSection");
 		
 		section.innerHTML = "";
 	}
@@ -266,9 +315,52 @@
 
 	//Fonction de recherche globale
 	function launchGlobalSearch() {
+
+		var byName = listInventoryObjects({"name": document.getElementById("Search").value});
+		var bySerial = listInventoryObjects({"serial": document.getElementById("Search").value});
+		var byOtherSerial = listInventoryObjects({"otherserial": document.getElementById("Search").value});
+		
 		tabs.activate(1);
-		var resultDiv = document.getElementById("GlobalSearchSection");
-		resultDiv.innerHTML = getMessage("labelPopupGlobalSearchLabel", ["<b>" + document.getElementById("Search").value + "</b>"]);
+
+		clearTableGlobalSearch();
+		createTableGlobalSearch();
+		var searchTable = document.getElementById("TableGlobalSearch");
+
+		// Chargement des résultats par Nom
+		for (var result = 0; result<byName.length;result++){
+			var tmpObject = getObject({"itemtype": byName[result].itemtype.toString(), "id": byName[result].id.toString()});
+			insertGlobalSearchRow(searchTable, {"id" : byName[result].id.toString(), "itemtype" : byName[result].itemtype.toString(), "name" : byName[result].name.toString(), "serial" :tmpObject.serial.toString(),"otherserial" : tmpObject.otherserial.toString() });
+		}
+		
+		// Chargement des résultats par Serial
+		for (var result = 0; result<bySerial.length;result++){
+			var tmpObject = getObject({"itemtype": bySerial[result].itemtype.toString(), "id": bySerial[result].id.toString()});
+			insertGlobalSearchRow(searchTable, {"id" : bySerial[result].id.toString(), "itemtype" : bySerial[result].itemtype.toString(), "name" : bySerial[result].name.toString(), "serial" : tmpObject.serial.toString(),"otherserial" : tmpObject.otherserial.toString() });
+		}
+		
+		// Chargement des résultats par OtherSerial
+		for (var result = 0; result<byOtherSerial.length;result++){
+			var tmpObject = getObject({"itemtype": byOtherSerial[result].itemtype.toString(), "id": byOtherSerial[result].id.toString()});
+			insertGlobalSearchRow(searchTable, {"id" : byOtherSerial[result].id.toString(), "itemtype" : byOtherSerial[result].itemtype.toString(), "name" : byOtherSerial[result].name.toString(), "serial" : tmpObject.serial.toString(),"otherserial" : tmpObject.otherserial.toString() });
+		}
+	
+		extVar.filterGridParams = {
+			col_width: [gWidth.tabCol1,gWidth.tabCol2,gWidth.tabCol3,gWidth.tabCol4],
+			grid: true,
+			filters_row_index: 1,
+			rows_counter: true,
+			sort: true,
+			paging: true,
+			paging_length: 7,
+			rows_counter_text: getMessage("labelPopupGlobalSearchLabel") + " : "
+		};
+		
+		extVar.filterGridParams.rows_counter_text = getMessage("labelPopupGlobalSearchLabel", [document.getElementById("Search").value]) + " : ";
+		var tf2 = setFilterGrid("TableGlobalSearch", extVar.filterGridParams);
+	
+		document.getElementById("pgafterspan_TableGlobalSearch").innerHTML = "&nbsp;" + getMessage("labelPopupTablePagingNumber");
+		document.getElementById("helpSpan_TableGlobalSearch").style.display = "none";
+		
 	}
 	
 	//Fonction de création des tabs
