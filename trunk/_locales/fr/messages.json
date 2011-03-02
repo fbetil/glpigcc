@@ -1,6 +1,6 @@
 ﻿{
-	"extName" : { "message":"Compagnon GLPI","description":"Nom de l'extension"},
-	"extDesc" : {"message":"Votre compagnon GLPI pour Google Chrome","description":"Description de l'extension"},
+	"extName" : { "message":"GlpiGCC","description":"Nom de l'extension"},
+	"extDesc" : {"message":"Compagnon GLPI pour Google Chrome","description":"Description de l'extension"},
 	
 	"error": {"message": "Erreur: $detail$ $extended$","description": "Gestion générique des erreurs. Attend le détail de l'erreur en paramètre.","placeholders": {"detail": {"content": "$1","example": "Erreur inconnue !"},"extended": {"content": "($2)","example": "Trace complète de l'erreur..."}}},
 
