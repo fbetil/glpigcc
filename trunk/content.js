@@ -1,4 +1,21 @@
-﻿var bgPage = chrome.extension.getBackgroundPage();
+﻿/*
+    This file is part of GlpiGCC (Glpi Google Chrome Compagnon).
+
+    GlpiGCC is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    GlpiGCC is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with GlpiGCC.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+var bgPage = chrome.extension.getBackgroundPage();
 var extVar = new Object();
 
 if (this != bgPage) { extVar = bgPage.extVar }
@@ -85,7 +102,7 @@ function getTracking() {
 		
 	// Récupération des Tickets attribués
 	switch (extVar.GlpiWebservicesVersion) {
-		case "X.X.X":
+		case "X.X.X":	// Version qui gère nativement les tickets attribués
 			extVar.assignTickets = listTickets({"status":"assign", "users_id_assign": extVar.glpiUserId, "id2name":true, "limit": extVar.glpiResultLimit});
 			break;
 		default:	//Gestion des versions qui ne permettent pas de récupérer directement les tickets dont on est chargé
