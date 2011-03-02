@@ -135,7 +135,6 @@ function checkInstall() {
 	
 	switch (extVar.GlpiVersion) {
 		default:
-		case "0.78.2":
 			extVar.glpiStyles.tab_odd_line = "tab_bg_1";
 			extVar.glpiStyles.tab_even_line = "tab_bg_2";
 			extVar.glpiStyles.tab_cadre = "tab_cadrehov";			
@@ -143,17 +142,20 @@ function checkInstall() {
 	}
 	
 	return (
-			localStorage.GlpiRootUrl
-			&& localStorage.SyncInterval
+			(localStorage.GlpiRootUrl != "")
+			&& (localStorage.WsUsername != undefined)
+			&& (localStorage.WsPassword != undefined)
+			&& (!isNaN(localStorage.SyncInterval))
 			&& localStorage.AuthSso
 			&& localStorage.AuthHook
-			&& localStorage.AuthUsername
-			&& localStorage.AuthPassword
-			&& localStorage.readItems
+			&& (localStorage.AuthUsername != undefined)
+			&& (localStorage.AuthPassword != undefined)
+			&& (localStorage.readItems != undefined)
 			&& localStorage.UseNotifications
-			&& localStorage.NotificationsDelay
+			&& (!isNaN(localStorage.NotificationsDelay))
 			&& localStorage.ModEnableTracking
 			&& localStorage.ModEnableGlobalSearch	
+			
 		);
 }
 
