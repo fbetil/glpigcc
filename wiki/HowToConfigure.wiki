@@ -1,0 +1,10 @@
+#summary How to configure your Glpi compagnon.
+
+= Introduction =
+
+To do...
+
+
+= Details =
+
+To do...
