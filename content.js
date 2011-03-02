@@ -5,6 +5,7 @@ if (this != bgPage) { extVar = bgPage.extVar }
 
 // Function d'initialisation de l'extension
 function initExtension() {
+	extVar.ExtWikiUrl = "http://code.google.com/p/glpigcc/w/list";
 	extVar.GlpiWebservicesUrl = "/plugins/webservices/xmlrpc.php";
 	extVar.GlpiIndexPageUrl = "/index.php";
 	extVar.GlpiLoginPageUrl = "/login.php";
@@ -12,7 +13,7 @@ function initExtension() {
 	extVar.GlpiCssUrl = new Array("/css/styles.css","/lib/extjs/resources/css/ext-all.css","/css/ext-all-glpi.css");
 	extVar.GlpiJsUrl = new Array();
 	extVar.GlpiGlobalSearchIcon = "/pics/ok2.png";
-	extVar.GlpiTicketUrl = "/front/ticket.form.php?id=$id$";
+	extVar.GlpiItemUrl = "/front/$itemtype$.form.php?id=$id$";
 	extVar.GlpiNewTicketUrl = "/front/ticket.form.php";
 	extVar.GlpiBookmarkRecordUrl = "/pics/bookmark_record.png";
 	
@@ -28,6 +29,8 @@ function initExtension() {
 	extVar.pauseExecution = false;
 	extVar.executionForced = false;
 	extVar.executionInProgress = false;
+	
+	extVar.globalSearchItemTypes = new Array("Printer","Computer","Monitor","NetworkEquipment","Peripheral","Phone");
 	
 	extVar.newTickets = new Array();
 	extVar.assignTickets = new Array();
@@ -85,7 +88,7 @@ function getTracking() {
 		case "X.X.X":
 			extVar.assignTickets = listTickets({"status":"assign", "users_id_assign": extVar.glpiUserId, "id2name":true, "limit": extVar.glpiResultLimit});
 			break;
-		default:	//Gestion des versuibs qui ne permettent pas de récupérer directement les tickets dont on est chargé
+		default:	//Gestion des versions qui ne permettent pas de récupérer directement les tickets dont on est chargé
 			extVar.assignTickets = new Array();
 			tmpTickets = listTickets({"status":"assign", "id2name":true, "limit": extVar.glpiResultLimit});
 			for (var ticket = 0; ticket<tmpTickets.length;ticket++){	//Filtre de la liste pour récupérer mes tickets
@@ -323,30 +326,6 @@ function getMyInfo() {
 	}
 }
 
-// Fonction de récupération des profils
-function listMyProfiles(args) {
-	args.session = extVar.glpiSession;
-	var _listMyProfiles = sendRequest('glpi.listMyProfiles', args);
-
-	if (!_listMyProfiles || _listMyProfiles.faultCode) {
-		return false;
-	}else{
-		return _listMyProfiles;
-	}
-}
-
-// Fonction d'activation d'un profil
-function setMyProfile(args) {
-	args.session = extVar.glpiSession;
-	var _setMyProfile = sendRequest('glpi.setMyProfile', args);
-
-	if (!_setMyProfile || _setMyProfile.faultCode) {
-		return false;
-	}else{
-		return _setMyProfile;
-	}
-}
-
 // Fonction de récupération des tickets
 function listTickets(args) {
 	args.session = extVar.glpiSession;
@@ -386,7 +365,7 @@ function getObject(args) {
 // Fonction de recherche globale
 function listInventoryObjects(args) {
 	args.session = extVar.glpiSession;
-	args.help = true;
+	args.itemtype = extVar.globalSearchItemTypes;
 	var _listInventoryObjects = sendRequest('glpi.listInventoryObjects', args);
 
 	if (!_listInventoryObjects || _listInventoryObjects.faultCode) {

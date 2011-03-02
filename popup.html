@@ -25,10 +25,13 @@
 	gHeight.tooltip = 90;
 	
 	gWidth.total = 700;
-	gWidth.tabCol1 = "130px";
-	gWidth.tabCol2 = "130px";
-	gWidth.tabCol3 = "388px";
-	gWidth.tabCol4 = "40px";
+	gWidth.tab1Col1 = "130px";
+	gWidth.tab1Col2 = "130px";
+	gWidth.tab1Col3 = "388px";
+	gWidth.tab1Col4 = "40px";
+	gWidth.tab2Col1 = "88px";
+	gWidth.tab2Col2 = "150px";
+	gWidth.tab2Col3 = "450px";
 	gWidth.tooltip = 300;
 	gWidth.table = "100%";
 	gWidth.tabs = 700;
@@ -55,7 +58,7 @@
 		}
 		
 		extVar.filterGridParams = {
-			col_width: [gWidth.tabCol1,gWidth.tabCol2,gWidth.tabCol3,gWidth.tabCol4],
+			col_width: [gWidth.tab1Col1,gWidth.tab1Col2,gWidth.tab1Col3,gWidth.tab1Col4],
 			col_3: 'none',
 			grid: true,
 			filters_row_index: 1,
@@ -144,7 +147,7 @@
 
 		td1.innerHTML = args.date;
 		td2.innerHTML = Utf8.decode(args.users_name);
-		td3.innerHTML = "<a href=\"javascript:goToTicket(" + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ")\" onmouseout=\"toggleComment(false," + args.id + ")\">" + title + "</a>"
+		td3.innerHTML = "<a href=\"javascript:goToItem('ticket'," + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", 'ticket')\" onmouseout=\"toggleComment(false," + args.id + ", 'ticket')\">" + title + "</a>"
 			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
 
 		if (localStorage.readItems.indexOf(args.state + args.id) == -1) {
@@ -169,31 +172,48 @@
 		var td1 = document.createElement('td');
 		var td2 = document.createElement('td');
 		var td3 = document.createElement('td');
-		var td4 = document.createElement('td');
 
 		(((count-1) % 2) == 0) ? tr.className = extVar.glpiStyles.tab_odd_line : tr.className = extVar.glpiStyles.tab_even_line;
 
-		td1.innerHTML = args.itemtype;
-		td2.innerHTML = Utf8.decode(args.name);
-		td3.innerHTML = Utf8.decode(args.serial);
-		td4.innerHTML = Utf8.decode(args.otherserial);
-		
+		td1.innerHTML = Utf8.decode(args.itemtype_name);
+		td2.innerHTML = "<a href=\"javascript:goToItem('" + args.itemtype.toLowerCase() + "'," + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", '" + args.itemtype + "')\" onmouseout=\"toggleComment(false," + args.id + ", '" + args.itemtype + "')\">" + Utf8.decode(args.name) + "</a>"
+			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
+		td3.innerHTML = Utf8.decode(args.comment);
+
 		tr.appendChild(td1);
 		tr.appendChild(td2);
 		tr.appendChild(td3);
-		tr.appendChild(td4);
 
 		table.getElementsByTagName('tbody')[0].appendChild(tr);
 	}
 	
-	//Fonction d'affichage/masquage du commentaire du ticket
-	function toggleComment(visible, id) {
+	//Fonction d'affichage/masquage du commentaire
+	function toggleComment(visible, id, type) {
 		var span = document.getElementById("Comment" + id);
 		
 		if (visible == true) {
 			if (span.innerHTML == "") {
-				var content = getTicket({"ticket": id});
-				var html = content.content.toString();
+				switch(type.toString()) {
+					case "ticket":
+						var content = getTicket({"ticket": id});
+						var html = content.content.toString();
+						break;
+					case "Printer":
+					case "Computer":
+					case "Monitor":
+					case "NetworkEquipment":
+					case "Peripheral":
+					case "Phone":
+						var tmpObject = getObject({"itemtype": type.toString(), "id": id});
+						if (!tmpObject.serial) {tmpObject.serial = ""}
+						if (!tmpObject.otherserial) {tmpObject.otherserial = ""}
+						if (!tmpObject.comment) {tmpObject.comment = ""}
+						var html = Utf8.encode(getMessage("labelPopupSearchResultName")) + " : " + tmpObject.name.toString() + "<br>"
+							+ Utf8.encode(getMessage("labelPopupSearchResultComment")) + " : " + tmpObject.comment.toString() + "<br>"
+							+ Utf8.encode(getMessage("labelPopupSearchResultSerial")) + " : " + tmpObject.serial.toString() + "<br>"
+							+ Utf8.encode(getMessage("labelPopupSearchResultOtherSerial")) + " : " + tmpObject.otherserial.toString();							
+						break;
+				}
 
 				html = html.replace(/(<br>|\s){2,}/g,"<br>");
 				
@@ -204,6 +224,7 @@
 			span.style.display = "none";
 		}
 	}
+
 	
 	// Fonction d'ajout des feuilles de style GLPI
 	function addGlpiCss() {
@@ -259,10 +280,9 @@
 		section.innerHTML = "<table id=\"TableGlobalSearch\" class=\"" + extVar.glpiStyles.tab_cadre + "\" style=\"width:" + gWidth.table + ";\" >"
 				+ "<thead>"
 				+ "<tr class=\"" + extVar.glpiStyles.tab_even_line + "\">"
-				+ "<th><label id=\"labelPopupSearchResultItemType\"></label></th>"
+				+ "<th><label id=\"labelPopupSearchResultItemTypeName\"></label></th>"
 				+ "<th><label id=\"labelPopupSearchResultName\"></label></th>"
-				+ "<th><label id=\"labelPopupSearchResultSerial\"></label></th>"
-				+ "<th><label id=\"labelPopupSearchResultOtherserial\"></label></th>"
+				+ "<th><label id=\"labelPopupSearchResultComment\"></label></th>"
 				+ "</tr>"
 				+ "</thead>"
 				+ "<tbody></tbody>"
@@ -294,9 +314,9 @@
 		chrome.tabs.create({ url: localStorage.GlpiRootUrl });
 	}
 	
-	//Fonction d'ouverture du ticket sur GLPI
-	function goToTicket(id) {
-		chrome.tabs.create({ url: localStorage.GlpiRootUrl + extVar.GlpiTicketUrl.replace("$id$", id)});
+	//Fonction d'ouverture d'un item sur GLPI
+	function goToItem(type, id) {
+		chrome.tabs.create({ url: localStorage.GlpiRootUrl + extVar.GlpiItemUrl.replace("$itemtype$", type).replace("$id$", id)});
 	}
 	
 	//Fonction de bookmark du ticket
@@ -320,38 +340,30 @@
 		var bySerial = listInventoryObjects({"serial": document.getElementById("Search").value});
 		var byOtherSerial = listInventoryObjects({"otherserial": document.getElementById("Search").value});
 		
+		var matchItems = byName.concat(bySerial);
+		matchItems = matchItems.concat(byOtherSerial);
+		
 		tabs.activate(1);
 
 		clearTableGlobalSearch();
 		createTableGlobalSearch();
 		var searchTable = document.getElementById("TableGlobalSearch");
 
-		// Chargement des résultats par Nom
-		for (var result = 0; result<byName.length;result++){
-			var tmpObject = getObject({"itemtype": byName[result].itemtype.toString(), "id": byName[result].id.toString()});
-			insertGlobalSearchRow(searchTable, {"id" : byName[result].id.toString(), "itemtype" : byName[result].itemtype.toString(), "name" : byName[result].name.toString(), "serial" :tmpObject.serial.toString(),"otherserial" : tmpObject.otherserial.toString() });
+		// Chargement des résultats
+		for (var result = 0; result<matchItems.length;result++){
+			var tmpObject = getObject({"itemtype": matchItems[result].itemtype.toString(), "id": matchItems[result].id.toString()});
+			if (!tmpObject.comment) {tmpObject.comment = ""}
+			insertGlobalSearchRow(searchTable, {"id" : matchItems[result].id.toString(), "itemtype" : matchItems[result].itemtype.toString(), "itemtype_name" : matchItems[result].itemtype_name.toString(), "name" : matchItems[result].name.toString(), "comment" :tmpObject.comment.toString()});
 		}
-		
-		// Chargement des résultats par Serial
-		for (var result = 0; result<bySerial.length;result++){
-			var tmpObject = getObject({"itemtype": bySerial[result].itemtype.toString(), "id": bySerial[result].id.toString()});
-			insertGlobalSearchRow(searchTable, {"id" : bySerial[result].id.toString(), "itemtype" : bySerial[result].itemtype.toString(), "name" : bySerial[result].name.toString(), "serial" : tmpObject.serial.toString(),"otherserial" : tmpObject.otherserial.toString() });
-		}
-		
-		// Chargement des résultats par OtherSerial
-		for (var result = 0; result<byOtherSerial.length;result++){
-			var tmpObject = getObject({"itemtype": byOtherSerial[result].itemtype.toString(), "id": byOtherSerial[result].id.toString()});
-			insertGlobalSearchRow(searchTable, {"id" : byOtherSerial[result].id.toString(), "itemtype" : byOtherSerial[result].itemtype.toString(), "name" : byOtherSerial[result].name.toString(), "serial" : tmpObject.serial.toString(),"otherserial" : tmpObject.otherserial.toString() });
-		}
-	
+			
 		extVar.filterGridParams = {
-			col_width: [gWidth.tabCol1,gWidth.tabCol2,gWidth.tabCol3,gWidth.tabCol4],
+			col_width: [gWidth.tab2Col1,gWidth.tab2Col2,gWidth.tab2Col3],
 			grid: true,
 			filters_row_index: 1,
 			rows_counter: true,
 			sort: true,
 			paging: true,
-			paging_length: 7,
+			paging_length: 20,
 			rows_counter_text: getMessage("labelPopupGlobalSearchLabel") + " : "
 		};
 		
@@ -361,6 +373,7 @@
 		document.getElementById("pgafterspan_TableGlobalSearch").innerHTML = "&nbsp;" + getMessage("labelPopupTablePagingNumber");
 		document.getElementById("helpSpan_TableGlobalSearch").style.display = "none";
 		
+		parseMessage(this);
 	}
 	
 	//Fonction de création des tabs
@@ -377,7 +390,7 @@
 					height: gHeight.tabs
 				},{
 					title: getMessage("labelPopupGlobalSearch"),
-					html: "<br><div id=\"GlobalSearchSection\"></div>",
+					html: "<br><div id=\"GlobalSearchSection\"><b>" + getMessage("labelPopupSearchEmpty") + "</b></div>",
 					height: gHeight.tabs
 				},{
 					title: getMessage("labelPopupAbout"),
@@ -386,11 +399,14 @@
 						+ "<h2>" + getMessage("labelPopupAboutGeneral") + "</h2><br>"
 						+ getMessage("labelPopupAboutVersion",[""]) + "<br>" + getMessage("labelPopupAboutAuthor")
 						+ "<br><br><h2>" + getMessage("labelPopupAboutHelp") + "</h2><br>"
-						+ getMessage("labelPopupAboutHelpContent")
+						+ getMessage("labelPopupAboutHelpContent") + " : <a href=\"#\" onclick=\"openExternalLink('" + extVar.ExtWikiUrl + "')\">" + getMessage("labelPopupAboutHomePage") + "</a>"
 						+ "<br><br><h2>" + getMessage("labelPopupAboutComponents") + "</h2><br>"
 						+ "Mimic - JavaScript XML-RPC Client : <a href=\"#\" onclick=\"openExternalLink('http://sourceforge.net/projects/mimic-xmlrpc/')\">" + getMessage("labelPopupAboutHomePage") + "</a><br>"
 						+ "Ext JS Cross-Browser Rich Internet Application Framework : <a href=\"#\" onclick=\"openExternalLink('http://www.sencha.com/products/extjs/')\">" + getMessage("labelPopupAboutHomePage") + "</a><br>"
 						+ "HTML Table Filter Generator : <a href=\"#\" onclick=\"openExternalLink('http://tablefilter.free.fr/')\">" + getMessage("labelPopupAboutHomePage") + "</a>"
+						+ "<br><br><h2>" + getMessage("labelPopupAboutLinks") + "</h2><br>"
+						+ "GLPI : <a href=\"#\" onclick=\"openExternalLink('http://glpi-project.org/')\">" + getMessage("labelPopupAboutHomePage") + "</a><br>"
+						+ "GLPI - Plugin Webservices : <a href=\"#\" onclick=\"openExternalLink('https://forge.indepnet.net/projects/webservices/')\">" + getMessage("labelPopupAboutHomePage") + "</a><br>"
 						+ "</div>",
 					height: gHeight.tabs
 				}

@@ -64,20 +64,23 @@
 	"labelPopupFooter" : {"message":"Dernière actualisation : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
 	"labelPopupTablePagingNumber" : {"message":"sur","description":"Label du popup"},
 	
-	"labelPopupGlobalSearchLabel" : {"message":"Recherche \"$mot$\" :","description":"Label du popup","placeholders": {"mot": {"content": "$1","example": "PC1"}}},
-	"labelPopupSearchResultItemType" : {"message":"Type","description":"Label du popup"},
+	"labelPopupSearchEmpty" : {"message":"Aucune recherche en cours...","description":"Label du popup"},
+	"labelPopupGlobalSearchLabel" : {"message":"Recherche \"$mot$\"","description":"Label du popup","placeholders": {"mot": {"content": "$1","example": "PC1"}}},
+	"labelPopupSearchResultItemTypeName" : {"message":"Type","description":"Label du popup"},
 	"labelPopupSearchResultName" : {"message":"Nom","description":"Label du popup"},
-	"labelPopupSearchResultSerial" : {"message":"N° de série","description":"Label du popup"},
-	"labelPopupSearchResultOtherserial" : {"message":"N° d'inventaire","description":"Label du popup"},
-
+	"labelPopupSearchResultComment" : {"message":"Description","description":"Label du popup"},
+	"labelPopupSearchResultSerial" : {"message":"Numéro de série","description":"Label du popup"},
+	"labelPopupSearchResultOtherSerial" : {"message":"Numéro d'inventaire","description":"Label du popup"},
+	
 	"labelPopupAboutGeneral" : {"message":"Informations","description":"Label du popup"},
 	"labelPopupAboutVersion" : {"message":"Version de l'extension : $version$","description":"Label du popup","placeholders": {"version": {"content": "$1","example": "0.1"}}},
 	"labelPopupAboutAuthor" : {"message":"Auteur : Florian BETIL","description":"Label du popup"},
 
 	"labelPopupAboutHelp" : {"message":"Utilisation","description":"Label du popup"},
-	"labelPopupAboutHelpContent" : {"message":"Bla Bla Bla...","description":"Label du popup"},
+	"labelPopupAboutHelpContent" : {"message":"Consulter le Wiki","description":"Label du popup"},
 	
 	"labelPopupAboutComponents" : {"message":"Composants externes","description":"Label du popup"},
+	"labelPopupAboutLinks" : {"message":"Liens externes","description":"Label du popup"},
 	"labelPopupAboutHomePage" : {"message":"Page officielle","description":"Label du popup"},
 
 	"FIN":{"message":"FIN","description":"FIN"}
