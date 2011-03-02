@@ -1,4 +1,4 @@
-#summary How to configure your Glpi compagnon.
+#summary How to configure GlpiGCC
 
 = Introduction =
 
