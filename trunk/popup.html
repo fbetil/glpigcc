@@ -39,7 +39,6 @@
 	gHeight.total = 580;
 	gHeight.tabs = 460;
 	gHeight.abouth1 = 100;
-	gHeight.tooltip = 90;
 	
 	gWidth.total = 700;
 	gWidth.tab1Col1 = "130px";
@@ -165,7 +164,7 @@
 		td1.innerHTML = args.date;
 		td2.innerHTML = Utf8.decode(args.users_name);
 		td3.innerHTML = "<a href=\"javascript:goToItem('ticket'," + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", 'ticket')\" onmouseout=\"toggleComment(false," + args.id + ", 'ticket')\">" + title + "</a>"
-			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
+			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + ";\"></span>";
 
 		if (localStorage.readItems.indexOf(args.state + args.id) == -1) {
 			td4.innerHTML = "<a href=\"#\" onclick=\"markAsRead('" + args.state + "',"  + args.id + ")\" title=\"" + getMessage("labelPopupMarkAsRead") + "\"><img id=\"bookmark" + args.id + "\" src=\"" + localStorage.GlpiRootUrl + extVar.GlpiBookmarkRecordUrl + "\" style=\"display: block; margin: 0 auto;\"></a>";
@@ -194,7 +193,7 @@
 
 		td1.innerHTML = Utf8.decode(args.itemtype_name);
 		td2.innerHTML = "<a href=\"javascript:goToItem('" + args.itemtype.toLowerCase() + "'," + args.id + ")\" onmouseover=\"toggleComment(true," + args.id + ", '" + args.itemtype + "')\" onmouseout=\"toggleComment(false," + args.id + ", '" + args.itemtype + "')\">" + Utf8.decode(args.name) + "</a>"
-			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + "; max-height: " + gHeight.tooltip + ";\"></span>";
+			+ "<span id=\"Comment" + args.id + "\" style=\"display: none; overflow:hidden; position:absolute; border: 1px solid #E0E26A; color:#444;font: normal 11px tahoma,arial,helvetica,sans-serif; background-color: #FCFDE5; padding: 10px; width: " + gWidth.tooltip + ";\"></span>";
 		td3.innerHTML = Utf8.decode(args.comment);
 
 		tr.appendChild(td1);
