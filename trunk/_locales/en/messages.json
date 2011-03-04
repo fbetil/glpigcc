@@ -1,0 +1,87 @@
+﻿{
+	"extName" : { "message":"GlpiGCC","description":"Nom de l'extension"},
+	"extDesc" : {"message":"Google Chrome Companion for GLPI","description":"Description de l'extension"},
+	
+	"error": {"message": "Error: $detail$ $extended$","description": "Gestion générique des erreurs. Attend le détail de l'erreur en paramètre.","placeholders": {"detail": {"content": "$1","example": "Erreur inconnue !"},"extended": {"content": "($2)","example": "Trace complète de l'erreur..."}}},
+
+	"defaultGlpiversion" : {"message":"Unknown","description":"Label de version par défaut pour GLPI"},
+	"defaultWSversion" : {"message":"Unknown","description":"Label de version par défaut pour le plugin Webservices"},
+
+	"iconNotConnected" : {"message":"Not connected","description":"Label de l'icone"},
+	"iconLoadingData" : {"message":"Loading data","description":"Label de l'icone"},
+	"iconConnected" : {"message":"Connected to account $compte$","description":"Label de l'icone","placeholders": {"compte": {"content": "$1","example": "Toto DUPONT"}}},
+	
+	"labelLoginMethodHook" : {"message":"Existing session","description":"Méthode de connexion utilisée"},
+	"labelLoginMethodSso" : {"message":"Connected through SSO","description":"Méthode de connexion utilisée"},
+	"labelLoginMethodClassic" : {"message":"Classic connection","description":"Méthode de connexion utilisée"},
+
+	"notificationConfig": {"message": "Configuration problem, check the options!", "description": "Problème de configuration"},
+	"notificationConfigTitle": {"message": "Can not Connect", "description": "Titre de notification"},
+	"notificationUnread": {"message": "You have $compte$ unread items.", "description": "Message éléments non-lus","placeholders": {"compte": {"content": "$1","exemple": "1"}}},
+	"notificationUnreadTitle": {"message": "Unread items", "description": "Eléments non-lus"},
+	
+	"titleOptions" : {"message":"GLPI Companion","description":"Titre de la fenêtre d'options"},
+
+	"buttonOptionsTest" : {"message":"Test","description":"Label du bouton de test de connexion"},
+	
+	"labelOptionsHead" : {"message":"Configure your GLPI Companion","description":"Entête de la fenête d'options"},
+	"labelOptionsSaved" : {"message":"Saved configuration.","description":"Information"},
+	"labelOptionsChapterServer" : {"message":"GLPI Server","description":"Entête du chapitre Serveur"},
+	"labelOptionsChapterSync" : {"message":"Synchronization","description":"Entête du chapitre Synchronisation"},
+	"labelOptionsChapterAuth" : {"message":"Authentification","description":"Entête du chapitre Authentification"},
+	"labelOptionsChapterNotifications" : {"message":"Notifications","description":"Entête du chapitre Notifications"},
+	"labelOptionsChapterModules" : {"message":"Modules","description":"Entête du chapitre Modules"},
+	"labelOptionsGlpiRootUrl" : {"message":"GLPI Server Base url (ie: http://exemple.com/glpi/) :","description":"URL de base du serveur GLPI"},
+	"labelOptionsSyncInterval" : {"message":"Synchonization interval (in minutes) :","description":"Interval de synchonisation"},
+	"labelOptionsAuthHook" : {"message":"Trying to use the connection already established by the browser.","description":"Utiliser une connexion déjà établie par une autre page du navigateur."},
+	"labelOptionsAuthSso" : {"message":"Use the automatic server connection (SSO) :","description":"Utiliser le paramétrage de connexion automatique du serveur"},
+	"labelOptionsAuthUsername" : {"message":"GLPI Username:","description":"Nom d'utilisateur dans GLPI"},
+	"labelOptionsAuthPassword" : {"message":"GLPI Password :","description":"Mot de passe dans GLPI"},
+	"labelOptionsWsUsername" : {"message":"(Optionnal) Webservices - Username :","description":"Nom d'utilisateur pour les Webservices"},
+	"labelOptionsWsPassword" : {"message":"(Optionnal) Webservices - Password :","description":"Mot de passe pour les Webservices"},
+	"labelOptionsTestGlpiversion" : {"message":"Version of GLPI on this server : $version$","description":"Version de GLPI sur le serveur","placeholders": {"version": {"content": "$1","example": "v0.80"}}},
+	"labelOptionsTestWSversion" : {"message":"Version of Webservices plugin on this server : $version$","description":"Version du plugin Webservices sur le serveur","placeholders": {"version": {"content": "$1","example": "v1.0"}}},
+	"labelOptionsTestError" : {"message":"Connection error","description":"Erreur du test"},
+	"labelOptionsUseNotifications" : {"message":"Use Desktop notifications :","description":"Utiliser les notifications de bureau"},
+	"labelOptionsNotificationsDelay" : {"message":"Delay notification display (in seconds):","description":"Délai d'affichage des notifications"},
+	"labelOptionsModEnableTracking" : {"message":"Enable Assistance module  :","description":"Activer le module d'assistance"},
+	"labelOptionsModEnableGlobalSearch" : {"message":"Enable Global Search module :","description":"Activer le module de recherche globale"},
+	
+	"labelPopupRefresh" : {"message":"Refresh","description":"Label du popup"},
+	"labelPopupOptions" : {"message":"Options","description":"Label du popup"},
+	"labelPopupSearch" : {"message":"Search","description":"Label du popup"},
+	"labelPopupWelcome" : {"message":"Hi $username$","description":"Label du popup", "placeholders": {"username": {"content": "$1", "example": "Toto DUPONT" }}},
+	"labelPopupNewTickets" : {"message":"New","description":"Label du popup"},
+	"labelPopupAssignTickets" : {"message":"Assigned","description":"Label du popup"},
+	"labelPopupOpenedDate" : {"message":"Opening Date","description":"Label du popup"},
+	"labelPopupTicketTitle" : {"message":"Ticket's title","description":"Label du popup"},
+	"labelPopupTicketUser" : {"message":"Requester","description":"Label du popup"},
+	"labelPopupTicketAction" : {"message":"Act.","description":"Label du popup"},
+	"labelPopupMarkAsRead" : {"message":"Mark as read","description":"Label du popup"},
+	"labelPopupTracking" : {"message":"Assistance","description":"Label du popup"},
+	"labelPopupGlobalSearch" : {"message":"Search","description":"Label du popup"},
+	"labelPopupAbout" : {"message":"About...","description":"Label du popup"},
+	"labelPopupFooter" : {"message":"Last update : $date$","description":"Pied du popup","placeholders": {"date": {"content": "$1","example": "01/01/2011 15:35"}}},
+	"labelPopupTablePagingNumber" : {"message":"of","description":"Label du popup"},
+	
+	"labelPopupSearchEmpty" : {"message":"No current research...","description":"Label du popup"},
+	"labelPopupGlobalSearchLabel" : {"message":"Search for \"$mot$\"","description":"Label du popup","placeholders": {"mot": {"content": "$1","example": "PC1"}}},
+	"labelPopupSearchResultItemTypeName" : {"message":"Type","description":"Label du popup"},
+	"labelPopupSearchResultName" : {"message":"Name","description":"Label du popup"},
+	"labelPopupSearchResultComment" : {"message":"Description","description":"Label du popup"},
+	"labelPopupSearchResultSerial" : {"message":"Serial Number","description":"Label du popup"},
+	"labelPopupSearchResultOtherSerial" : {"message":"Inventory number","description":"Label du popup"},
+	
+	"labelPopupAboutGeneral" : {"message":"Informations","description":"Label du popup"},
+	"labelPopupAboutVersion" : {"message":"Extension version : $version$","description":"Label du popup","placeholders": {"version": {"content": "$1","example": "0.1"}}},
+	"labelPopupAboutAuthor" : {"message":"Author : Florian BETIL","description":"Label du popup"},
+
+	"labelPopupAboutHelp" : {"message":"How to use","description":"Label du popup"},
+	"labelPopupAboutHelpContent" : {"message":"Read online Wiki","description":"Label du popup"},
+	
+	"labelPopupAboutComponents" : {"message":"External components","description":"Label du popup"},
+	"labelPopupAboutLinks" : {"message":"External links","description":"Label du popup"},
+	"labelPopupAboutHomePage" : {"message":"Homepage","description":"Label du popup"},
+
+	"FIN":{"message":"FIN","description":"FIN"}
+}
