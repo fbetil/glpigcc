@@ -1,6 +1,6 @@
 ﻿{
   "name": "__MSG_extName__",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "homepage_url": "http://code.google.com/p/glpigcc/",
   "update_url": "http://glpigcc.googlecode.com/files/updates.xml",
   "description": "__MSG_extDesc__",
