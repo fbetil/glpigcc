@@ -95,12 +95,22 @@
 
 		// Chargement des nouveaux tickets
 		for (var ticket = 0; ticket<extVar.newTickets.length;ticket++){
-			insertTicketRow(newTable, {"state": "n", "id" : extVar.newTickets[ticket].id.toString(), "date" : extVar.newTickets[ticket].date.toString(), "name" : extVar.newTickets[ticket].name.toString(), "users_name" : extVar.newTickets[ticket].users_name.toString()});
+			var tmpTicket = extVar.newTickets[ticket];
+			if (!tmpTicket.id) {tmpTicket.id = ""}
+			if (!tmpTicket.date) {tmpTicket.date = ""}
+			if (!tmpTicket.name) {tmpTicket.name = ""}
+			if (!tmpTicket.users_name) {tmpTicket.users_name = ""}
+			insertTicketRow(newTable, {"state": "n", "id" : tmpTicket.id.toString(), "date" : tmpTicket.date.toString(), "name" : tmpTicket.name.toString(), "users_name" : tmpTicket.users_name.toString()});
 		}
 		
 		// Chargement des tickets attribués
 		for (var ticket = 0; ticket<extVar.assignTickets.length;ticket++){
-			insertTicketRow(assignTable, {"state": "a", "id" : extVar.assignTickets[ticket].id.toString(), "date" : extVar.assignTickets[ticket].date.toString(), "name" : extVar.assignTickets[ticket].name.toString(), "users_name" : extVar.assignTickets[ticket].users_name.toString() });
+			var tmpTicket = extVar.assignTickets[ticket];
+			if (!tmpTicket.id) {tmpTicket.id = ""}
+			if (!tmpTicket.date) {tmpTicket.date = ""}
+			if (!tmpTicket.name) {tmpTicket.name = ""}
+			if (!tmpTicket.users_name) {tmpTicket.users_name = ""}
+			insertTicketRow(assignTable, {"state": "a", "id" : tmpTicket.id.toString(), "date" : tmpTicket.date.toString(), "name" : tmpTicket.name.toString(), "users_name" : tmpTicket.users_name.toString() });
 		}
 		
 		extVar.filterGridParams.rows_counter_text = getMessage("labelPopupNewTickets") + " : ";
